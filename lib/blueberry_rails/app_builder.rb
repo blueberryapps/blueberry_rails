@@ -1,6 +1,8 @@
 module BlueberryRails
   class AppBuilder < Rails::AppBuilder
 
+    include BlueberryRails::ActionHelpers
+
     def readme
       template 'README.md.erb', 'README.md'
     end
@@ -24,6 +26,7 @@ module BlueberryRails
     def use_postgres_config_template
       template 'database.yml.erb', 'config/database.yml',
         force: true
+      template 'database.yml.erb', 'config/database.yml.sample'
     end
 
     def setup_staging_environment
@@ -63,23 +66,57 @@ module BlueberryRails
       copy_file 'spec_helper.rb', 'spec/spec_helper.rb'
     end
 
+    def enable_factory_girl_syntax
+      copy_file 'factory_girl_syntax.rb', 'spec/support/factory_girl.rb'
+    end
+
+
+    def raise_on_unpermitted_parameters
+      configure_environment 'development',
+        'config.action_controller.action_on_unpermitted_parameters = :raise'
+    end
+
     def configure_generators
       config = <<-RUBY
-      config.generators do |generate|
-        generate.helper false
-        generate.javascript_engine false
-        generate.request_specs false
-        generate.routing_specs false
-        generate.stylesheets false
-        generate.test_framework :rspec
-        generate.view_specs false
-      end
+    config.generators do |generate|
+      generate.helper false
+      generate.javascript_engine false
+      generate.request_specs false
+      generate.routing_specs false
+      generate.stylesheets false
+      generate.test_framework :rspec
+      generate.view_specs false
+    end
 
       RUBY
 
       inject_into_class 'config/application.rb', 'Application', config
     end
 
+    def remove_routes_comment_lines
+      replace_in_file 'config/routes.rb',
+                      /Application\.routes\.draw do.*end/m,
+                      "Application.routes.draw do\nend"
+    end
+
+    def gitignore_files
+      remove_file '.gitignore'
+      copy_file 'gitignore', '.gitignore'
+      [ 'app/views/pages',
+        'spec/lib',
+        'spec/controllers',
+        'spec/helpers',
+        'spec/support/matchers',
+        'spec/support/mixins',
+        'spec/support/shared_examples' ].each do |dir|
+        run "mkdir #{dir}"
+        run "touch #{dir}/.keep"
+      end
+    end
+
+    def init_git
+      run 'git init'
+    end
+
   end
 end
-

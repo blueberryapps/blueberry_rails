@@ -25,6 +25,8 @@ module BlueberryRails
       invoke :setup_test_environment
       invoke :setup_staging_environment
       invoke :configure_app
+      invoke :remove_routes_comment_lines
+      invoke :setup_git
     end
 
     def customize_gemfile
@@ -46,11 +48,14 @@ module BlueberryRails
     def setup_development_environment
       say 'Setting up the development environment'
       build :configure_generators
+      build :raise_on_unpermitted_parameters
     end
 
     def setup_test_environment
       say 'Setting up the test environment'
       build :generate_rspec
+      build :configure_rspec
+      build :enable_factory_girl_syntax
     end
 
     def setup_staging_environment
@@ -61,6 +66,17 @@ module BlueberryRails
     def configure_app
       build :replace_secret_token
     end
+
+    def remove_routes_comment_lines
+      build :remove_routes_comment_lines
+    end
+
+    def setup_git
+      say 'Initializing git'
+      build :setup_gitignore
+      build :init_git
+    end
+
 
     def run_bundle
     end
@@ -73,3 +89,4 @@ module BlueberryRails
 
   end
 end
+
