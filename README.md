@@ -1,24 +1,16 @@
-# BlueberryRails
+# Blueberry Rails
 
-TODO: Write a gem description
+A Rails application template used at Blueberry Apps. 
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-    gem 'blueberry_rails'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
+Install the gem:
 
     $ gem install blueberry_rails
 
-## Usage
+Then you can run
 
-TODO: Write usage instructions here
+    $ blueberry_rails newproject
 
 ## Contributing
 
@@ -27,3 +19,4 @@ TODO: Write usage instructions here
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
