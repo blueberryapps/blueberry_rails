@@ -12,6 +12,11 @@ Then you can run
 
     $ blueberry_rails newproject
 
+## Credits
+
+Based on [suspenders](https://github.com/thoughtbot/suspenders/blob/master/README.md) 
+gem by [thoughtbot](http://thoughtbot.com/community).
+
 ## Contributing
 
 1. Fork it

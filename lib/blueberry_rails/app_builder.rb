@@ -11,8 +11,9 @@ module BlueberryRails
     end
 
     def replace_secret_token
-      remove_file 'config/initializers/secret_token.rb'
-      copy_file 'secret_token.rb', 'config/initializers/secret_token.rb'
+      template 'secret_token.rb.erb',
+        'config/initializers/secret_token.rb',
+        force: true
     end
 
     def set_ruby_to_version_being_used
@@ -22,7 +23,7 @@ module BlueberryRails
 
     def use_postgres_config_template
       template 'database.yml.erb', 'config/database.yml',
-        :force => true
+        force: true
     end
 
     def setup_staging_environment
@@ -40,7 +41,7 @@ module BlueberryRails
     def create_application_layout
       template 'layout.html.slim.erb',
         'app/views/layouts/application.html.slim',
-        :force => true
+        force: true
     end
 
     def remove_turbolinks
@@ -55,6 +56,11 @@ module BlueberryRails
 
     def generate_rspec
       generate 'rspec:install'
+    end
+
+    def configure_rspec
+      remove_file 'spec/spec_helper.rb'
+      copy_file 'spec_helper.rb', 'spec/spec_helper.rb'
     end
 
     def configure_generators

@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['jzajpt@blueberry.cz']
   spec.description   = %q{A Rails app template by BlueberryApps }
   spec.summary       = %q{A Rails app template by BlueberryApps}
-  spec.homepage      = ''
+  spec.homepage      = 'https://github.com/blueberryapps/blueberry_rails'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files`.split($/)
