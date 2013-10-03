@@ -65,6 +65,7 @@ module BlueberryRails
 
     def configure_app
       build :replace_secret_token
+      build :disable_xml_params
     end
 
     def remove_routes_comment_lines

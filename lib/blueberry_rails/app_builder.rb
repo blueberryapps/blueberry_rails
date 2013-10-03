@@ -18,6 +18,10 @@ module BlueberryRails
         force: true
     end
 
+    def disable_xml_params
+      copy_file 'disable_xml_params.rb', 'config/initializers/disable_xml_params.rb'
+    end
+
     def set_ruby_to_version_being_used
       inject_into_file 'Gemfile', "\n\nruby '#{RUBY_VERSION}'",
       after: /source 'https:\/\/rubygems.org'/
@@ -99,7 +103,7 @@ module BlueberryRails
                       "Application.routes.draw do\nend"
     end
 
-    def gitignore_files
+    def setup_gitignore
       remove_file '.gitignore'
       copy_file 'gitignore', '.gitignore'
       [ 'app/views/pages',
