@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+require File.expand_path(File.join('..', 'lib', 'blueberry_rails', 'generators', 'app_generator'), File.dirname(__FILE__))
+require File.expand_path(File.join('..', 'lib', 'blueberry_rails', 'app_builder'), File.dirname(__FILE__))
+
+templates_root = File.expand_path(File.join('..', 'templates'), File.dirname(__FILE__))
+BlueberryRails::AppGenerator.source_root templates_root
+BlueberryRails::AppGenerator.source_paths << Rails::Generators::AppGenerator.source_root << templates_root
+
+BlueberryRails::AppGenerator.start
+
