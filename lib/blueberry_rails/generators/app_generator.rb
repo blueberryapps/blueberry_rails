@@ -30,6 +30,7 @@ module BlueberryRails
       invoke :setup_development_environment
       invoke :setup_test_environment
       invoke :setup_staging_environment
+      invoke :create_views
       invoke :configure_app
       invoke :remove_routes_comment_lines
       invoke :setup_gems
@@ -68,6 +69,12 @@ module BlueberryRails
     def setup_staging_environment
       say 'Setting up the staging environment'
       build :setup_staging_environment
+    end
+
+    def create_views
+      build :create_partials_directory
+      build :create_shared_flashes
+      build :create_application_layout
     end
 
     def configure_app
