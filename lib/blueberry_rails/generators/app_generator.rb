@@ -74,6 +74,7 @@ module BlueberryRails
       build :replace_secret_token
       build :disable_xml_params
       build :setup_mailer_hosts
+      build :remove_turbolinks
     end
 
     def remove_routes_comment_lines
