@@ -7,8 +7,14 @@ module BlueberryRails
     class_option :database, :type => :string, :aliases => '-d', :default => 'postgresql',
     :esc => "Preconfigure for selected database (options: #{DATABASES.join('/')})"
 
-    class_option :github, :type => :string, :aliases => '-G', :default => nil,
-      :desc => 'Create Github repository and add remote origin pointed to repo'
+    # class_option :github, :type => :string, :aliases => '-G', :default => nil,
+    #   :desc => 'Create Github repository and add remote origin pointed to repo'
+
+    class_option :devise, :type => :boolean, :aliases => '-D', :default => true,
+      :desc => 'Include and generate devise'
+
+    class_option :devise_model, :type => :string, :aliases => '-M', :default => 'User',
+      :desc => 'Name of devise model to generate'
 
     class_option :skip_test_unit, :type => :boolean, :aliases => '-T', :default => true,
       :desc => 'Skip Test::Unit files'
@@ -26,6 +32,7 @@ module BlueberryRails
       invoke :setup_staging_environment
       invoke :configure_app
       invoke :remove_routes_comment_lines
+      invoke :setup_gems
       invoke :setup_git
     end
 
@@ -66,10 +73,18 @@ module BlueberryRails
     def configure_app
       build :replace_secret_token
       build :disable_xml_params
+      build :setup_mailer_hosts
     end
 
     def remove_routes_comment_lines
       build :remove_routes_comment_lines
+    end
+
+    def setup_gems
+      if options[:devise]
+        say 'Setting up devise'
+        build :install_devise
+      end
     end
 
     def setup_git

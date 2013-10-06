@@ -9,7 +9,7 @@ module BlueberryRails
 
     def replace_gemfile
       remove_file 'Gemfile'
-      copy_file 'Gemfile_custom', 'Gemfile'
+      template 'Gemfile_custom.erb', 'Gemfile'
     end
 
     def replace_secret_token
@@ -20,6 +20,13 @@ module BlueberryRails
 
     def disable_xml_params
       copy_file 'disable_xml_params.rb', 'config/initializers/disable_xml_params.rb'
+    end
+
+    def setup_mailer_hosts
+      action_mailer_host 'development', "#{app_name}.dev"
+      action_mailer_host 'test', 'www.example.com'
+      action_mailer_host 'staging', "staging.#{app_name}.com"
+      action_mailer_host 'production', "#{app_name}.com"
     end
 
     def set_ruby_to_version_being_used
@@ -101,6 +108,18 @@ module BlueberryRails
       replace_in_file 'config/routes.rb',
                       /Application\.routes\.draw do.*end/m,
                       "Application.routes.draw do\nend"
+    end
+
+    def install_devise
+      generate 'devise:install'
+      generate 'controller', 'root index'
+      remove_routes_comment_lines
+      inject_into_file 'config/routes.rb',
+                       "  root to: 'root#index'\n",
+                       after: "#{app_const}.routes.draw do\n"
+      if options[:devise_model].present?
+        generate 'devise', options[:devise_model]
+      end
     end
 
     def setup_gitignore
