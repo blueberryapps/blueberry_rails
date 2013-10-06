@@ -64,6 +64,7 @@ module BlueberryRails
       build :generate_rspec
       build :configure_rspec
       build :enable_factory_girl_syntax
+      build :init_guard
     end
 
     def setup_staging_environment

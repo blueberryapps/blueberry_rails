@@ -82,6 +82,10 @@ module BlueberryRails
       copy_file 'factory_girl_syntax.rb', 'spec/support/factory_girl.rb'
     end
 
+    def init_guard
+      bundle_command 'exec guard init'
+    end
+
 
     def raise_on_unpermitted_parameters
       configure_environment 'development',
