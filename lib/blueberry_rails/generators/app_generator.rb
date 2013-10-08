@@ -64,6 +64,7 @@ module BlueberryRails
       build :generate_rspec
       build :configure_rspec
       build :enable_factory_girl_syntax
+      build :test_factories_first
       build :init_guard
     end
 

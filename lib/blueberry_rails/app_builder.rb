@@ -78,6 +78,10 @@ module BlueberryRails
       copy_file 'spec_helper.rb', 'spec/spec_helper.rb'
     end
 
+    def test_factories_first
+      copy_file 'factories_spec.rb', 'spec/models/factories_spec.rb'
+    end
+
     def enable_factory_girl_syntax
       copy_file 'factory_girl_syntax.rb', 'spec/support/factory_girl.rb'
     end
