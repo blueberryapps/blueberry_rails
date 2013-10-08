@@ -1,0 +1,5 @@
+server 'REPLACE_ME',  :app, :web, :db, primary: true
+set :rails_env,       'production'
+set :user,            '<%= app_name %>_com'
+set :deploy_to,       '/var/www/<%= app_name %>_com'
+

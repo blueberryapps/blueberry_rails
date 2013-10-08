@@ -94,6 +94,8 @@ module BlueberryRails
         say 'Setting up devise'
         build :install_devise
       end
+      say 'Setting up Capistrano'
+      build :setup_capistrano
     end
 
     def setup_git

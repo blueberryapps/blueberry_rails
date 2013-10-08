@@ -1,0 +1,5 @@
+server 'REPLACE_ME',  :app, :web, :db, primary: true
+set :rails_env,       'staging'
+set :user,            '<%= app_name %>_webapps_cz'
+set :deploy_to,       '/var/www/<%= app_name %>_webpapps_cz'
+

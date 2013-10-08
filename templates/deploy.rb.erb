@@ -1,0 +1,40 @@
+require 'bundler/capistrano'
+set :bundle_without, [:darwin, :test]
+
+set :stages, %w(staging production)
+require 'capistrano/ext/multistage'
+
+set :application, '<%= app_name %>'
+set :repository,  'git@github.com:blueberryapps/<%= app_name %>.git'
+set :branch,      'master'
+
+default_run_options[:pty] = true
+ssh_options[:forward_agent] = true
+
+set :use_sudo,       false
+set :deploy_via,     :remote_cache
+set :keep_releases,  3
+set :group_writable, false
+ssh_options[:forward_agent] = true
+
+after 'deploy:restart',     'deploy:cleanup'
+after 'deploy:update_code', 'deploy:symlink_shared'
+load 'deploy/assets'
+
+namespace :deploy do
+
+  task :start do ; end
+  task :stop do ; end
+  task :restart, :roles => :app, :except => { :no_release => true } do
+    run "#{try_sudo} touch #{File.join(current_path, 'tmp', 'restart.txt')}"
+  end
+
+  desc 'Create symbolic links for all shared and platform-specific resources.'
+  task :symlink_shared, roles: [:app] do
+    run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
+    run "ln -nfs #{shared_path}/system #{release_path}/public/system"
+    run "ln -nfs #{shared_path}/config/dotenv #{release_path}/.env"
+  end
+
+end
+
