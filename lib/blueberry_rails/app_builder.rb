@@ -120,6 +120,10 @@ module BlueberryRails
       inject_into_class 'config/application.rb', 'Application', config
     end
 
+    def add_ruby_version_file
+      add_file '.ruby-version', "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}"
+    end
+
     def remove_routes_comment_lines
       replace_in_file 'config/routes.rb',
                       /Application\.routes\.draw do.*end/m,

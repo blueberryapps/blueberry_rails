@@ -85,6 +85,7 @@ module BlueberryRails
       build :disable_xml_params
       build :setup_mailer_hosts
       build :remove_turbolinks
+      build :add_ruby_version_file
     end
 
     def remove_routes_comment_lines
