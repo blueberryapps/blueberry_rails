@@ -96,6 +96,13 @@ module BlueberryRails
         'config.action_controller.action_on_unpermitted_parameters = :raise'
     end
 
+    def configure_mailcatcher
+      configure_environment 'development',
+        'config.action_mailer.delivery_method = :smtp'
+      configure_environment 'development',
+        "config.action_mailer.smtp_settings = { address: 'localhost', port: 1025 }"
+    end
+
     def configure_generators
       config = <<-RUBY
     config.generators do |generate|

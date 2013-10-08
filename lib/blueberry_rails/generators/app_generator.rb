@@ -57,6 +57,7 @@ module BlueberryRails
       say 'Setting up the development environment'
       build :configure_generators
       build :raise_on_unpermitted_parameters
+      build :configure_mailcatcher
     end
 
     def setup_test_environment
