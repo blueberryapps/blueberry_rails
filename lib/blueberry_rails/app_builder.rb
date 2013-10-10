@@ -143,7 +143,7 @@ module BlueberryRails
     end
 
     def setup_capistrano
-      bundle_command 'exec capify .'
+      bundle_command 'exec cap install'
       remove_file 'config/deploy.rb'
       template 'deploy.rb.erb', 'config/deploy.rb'
       template 'deploy_production.rb.erb', 'config/deploy/production.rb'
