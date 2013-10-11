@@ -143,12 +143,11 @@ module BlueberryRails
     end
 
     def setup_capistrano
-      bundle_command 'exec capify .'
-      remove_file 'config/deploy.rb'
+      template 'Capfile', 'Capfile'
       template 'deploy.rb.erb', 'config/deploy.rb'
       template 'deploy_production.rb.erb', 'config/deploy/production.rb'
       template 'deploy_staging.rb.erb', 'config/deploy/staging.rb'
-      run 'mkdir config/deploy'
+      template 'capistrano_dotenv.cap', 'lib/capistrano/tasks/dotenv.cap'
     end
 
     def setup_gitignore
