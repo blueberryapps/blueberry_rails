@@ -147,7 +147,7 @@ module BlueberryRails
       template 'deploy.rb.erb', 'config/deploy.rb'
       template 'deploy_production.rb.erb', 'config/deploy/production.rb'
       template 'deploy_staging.rb.erb', 'config/deploy/staging.rb'
-      run 'mkdir -p lib/capistrano/tasks'
+      template 'capistrano_dotenv.cap', 'lib/capistrano/tasks/dotenv.cap'
     end
 
     def setup_gitignore
