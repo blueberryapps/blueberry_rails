@@ -82,8 +82,9 @@ module BlueberryRails
       copy_file 'factories_spec.rb', 'spec/models/factories_spec.rb'
     end
 
-    def enable_factory_girl_syntax
+    def setup_rspec_support_files
       copy_file 'factory_girl_syntax.rb', 'spec/support/factory_girl.rb'
+      copy_file 'database_cleaner_setup.rb', 'spec/support/databse_cleaner.rb'
     end
 
     def init_guard

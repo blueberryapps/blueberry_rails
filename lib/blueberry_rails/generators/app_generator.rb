@@ -64,7 +64,7 @@ module BlueberryRails
       say 'Setting up the test environment'
       build :generate_rspec
       build :configure_rspec
-      build :enable_factory_girl_syntax
+      build :setup_rspec_support_files
       build :test_factories_first
       build :init_guard
     end
