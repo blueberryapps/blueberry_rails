@@ -31,8 +31,7 @@ class BlueberryRailsTest < Minitest::Unit::TestCase
   end
 
   def cmd(command)
-    %x(#{command})
-    $?
+    system command
   end
 
 end
