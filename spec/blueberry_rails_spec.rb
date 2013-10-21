@@ -1,7 +1,7 @@
 require 'minitest/autorun'
 require 'fileutils'
 
-class BlueberryRailsTest < Minitest::Test
+class BlueberryRailsTest < Minitest::Unit::TestCase
 
   def setup
     FileUtils.rm_rf 'test_project'
