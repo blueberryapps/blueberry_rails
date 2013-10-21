@@ -5,8 +5,8 @@ class BlueberryRailsTest < Minitest::Test
 
   def setup
     FileUtils.rm_rf 'test_project'
-    `dropdb test_project_development`
-    `dropdb test_project_test`
+    cmd 'dropdb test_project_development'
+    cmd 'dropdb test_project_test'
   end
 
   def test_rake_runs_cleanly_first
@@ -18,17 +18,21 @@ class BlueberryRailsTest < Minitest::Test
 
   def create_project(project_name)
     bin = File.expand_path(File.join('..', 'bin', 'blueberry_rails'), File.dirname(__FILE__))
-    `#{bin} #{project_name}`
+    cmd "#{bin} #{project_name}"
   end
 
   def run_rake(project_name)
     Dir.chdir(project_name) do
-      `bundle exec db:create`
-      `bundle exec db:migrate`
-      `bundle exec db:test:prepare`
-      `bundle exec rake`
-      assert $?.success?
+      cmd 'bundle exec db:create'
+      cmd 'bundle exec db:migrate'
+      cmd 'bundle exec db:test:prepare'
+      assert cmd('bundle exec rake')
     end
+  end
+
+  def cmd(command)
+    %x(#{command})
+    $?
   end
 
 end
