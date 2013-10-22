@@ -7,11 +7,19 @@ class BlueberryRailsTest < Minitest::Unit::TestCase
     FileUtils.rm_rf 'test_project'
     cmd 'dropdb test_project_development'
     cmd 'dropdb test_project_test'
+
+    %w[RUBYOPT BUNDLE_PATH BUNDLE_BIN_PATH BUNDLE_GEMFILE].each do |key|
+      set_env key, nil
+    end
+  end
+
+  def teardown
+    restore_env
   end
 
   def test_rake_runs_cleanly_first
     create_project 'test_project'
-    run_rake 'test_project'
+    assert run_rake('test_project')
   end
 
   protected
@@ -23,15 +31,30 @@ class BlueberryRailsTest < Minitest::Unit::TestCase
 
   def run_rake(project_name)
     Dir.chdir(project_name) do
-      cmd 'bundle exec db:create'
-      cmd 'bundle exec db:migrate'
-      cmd 'bundle exec db:test:prepare'
-      assert cmd('bundle exec rake')
+      cmd 'bundle exec rake db:create'
+      cmd 'bundle exec rake db:migrate'
+      cmd 'bundle exec rake db:test:prepare'
+      cmd('bundle exec rake')
     end
   end
 
   def cmd(command)
-    system command
+    system "#{command}"
+  end
+
+  def original_env
+    @original_env ||= {}
+  end
+
+  def set_env(key, value)
+    original_env[key] = ENV.delete(key)
+    ENV[key] = value
+  end
+
+  def restore_env
+    original_env.each do |key, val|
+      ENV[key] = val
+    end
   end
 
 end
