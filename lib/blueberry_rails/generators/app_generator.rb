@@ -34,6 +34,7 @@ module BlueberryRails
       invoke :configure_app
       invoke :remove_routes_comment_lines
       invoke :setup_gems
+      invoke :fix_specs
       invoke :setup_git
     end
 
@@ -99,6 +100,11 @@ module BlueberryRails
       end
       say 'Setting up Capistrano'
       build :setup_capistrano
+    end
+
+    def fix_specs
+      build :replace_users_factory
+      build :replace_root_controller_spec
     end
 
     def setup_git

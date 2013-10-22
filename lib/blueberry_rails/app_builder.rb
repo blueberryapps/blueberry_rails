@@ -151,6 +151,16 @@ module BlueberryRails
       template 'capistrano_dotenv.cap', 'lib/capistrano/tasks/dotenv.cap'
     end
 
+    def replace_users_factory
+      remove_file 'spec/factories/users.rb'
+      template 'users_factory.rb', 'spec/factories/users.rb'
+    end
+
+    def replace_root_controller_spec
+      remove_file 'spec/controllers/root_controller_spec.rb'
+      template 'root_controller_spec.rb', 'spec/controllers/root_controller_spec.rb'
+    end
+
     def setup_gitignore
       remove_file '.gitignore'
       copy_file 'gitignore', '.gitignore'
