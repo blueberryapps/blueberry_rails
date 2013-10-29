@@ -167,7 +167,7 @@ module BlueberryRails
       [ 'app/views/pages',
         'spec/lib',
         'spec/controllers',
-        'spec/helpers',
+        'spec/features',
         'spec/support/matchers',
         'spec/support/mixins',
         'spec/support/shared_examples' ].each do |dir|
