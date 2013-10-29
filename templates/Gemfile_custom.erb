@@ -20,7 +20,7 @@ group :development do
   gem 'capistrano-bundler'
   gem 'capistrano-rails'
   gem 'capistrano-rbenv', github: 'capistrano/rbenv'
-  gem 'guard-rails'
+  gem 'guard-rspec'
   gem 'mailcatcher'
 end
 
@@ -34,7 +34,9 @@ group :staging, :production do
 end
 
 group :test do
+<% unless `uname -r`.to_i == 13 -%>
   gem 'capybara-webkit', '>= 1.0.0'
+<% end -%>
   gem 'database_cleaner'
   gem 'simplecov', require: false
 end
