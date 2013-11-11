@@ -35,9 +35,7 @@ group :staging, :production do
 end
 
 group :test do
-<% unless `uname -r`.to_i == 13 -%>
-  gem 'capybara-webkit', '>= 1.0.0'
-<% end -%>
+  gem 'poltergeist', '>= 1.4.0'
   gem 'database_cleaner'
   gem 'simplecov', require: false
 end
