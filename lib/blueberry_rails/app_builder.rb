@@ -171,7 +171,7 @@ module BlueberryRails
         'spec/support/matchers',
         'spec/support/mixins',
         'spec/support/shared_examples' ].each do |dir|
-        run "mkdir #{dir}"
+        run "mkdir -p #{dir}"
         run "touch #{dir}/.keep"
       end
     end
