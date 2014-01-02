@@ -164,8 +164,7 @@ module BlueberryRails
     def setup_gitignore
       remove_file '.gitignore'
       copy_file 'gitignore', '.gitignore'
-      [ 'app/views/pages',
-        'spec/lib',
+      [ 'spec/lib',
         'spec/controllers',
         'spec/features',
         'spec/support/matchers',
