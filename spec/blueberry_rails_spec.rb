@@ -17,16 +17,21 @@ class BlueberryRailsTest < Minitest::Unit::TestCase
     restore_env
   end
 
-  def test_rake_runs_cleanly_first
+  def test_rake_runs_cleanly
     create_project 'test_project'
+    assert run_rake('test_project')
+  end
+
+  def test_rake_runs_cleanly_with_bootstrap_option
+    create_project 'test_project', '--bootstrap'
     assert run_rake('test_project')
   end
 
   protected
 
-  def create_project(project_name)
+  def create_project(project_name, options = nil)
     bin = File.expand_path(File.join('..', 'bin', 'blueberry_rails'), File.dirname(__FILE__))
-    cmd "#{bin} #{project_name}"
+    cmd "#{bin} #{project_name} #{options}"
   end
 
   def run_rake(project_name)

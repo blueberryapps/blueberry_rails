@@ -4,20 +4,25 @@ require 'rails/generators/rails/app/app_generator'
 module BlueberryRails
   class AppGenerator < Rails::Generators::AppGenerator
 
-    class_option :database, :type => :string, :aliases => '-d', :default => 'postgresql',
-    :esc => "Preconfigure for selected database (options: #{DATABASES.join('/')})"
+    class_option :database, :type => :string, :aliases => '-d',
+      :default => 'postgresql',
+      :desc => "Preconfigure for selected database " +
+               "(options: #{DATABASES.join('/')})"
 
     # class_option :github, :type => :string, :aliases => '-G', :default => nil,
     #   :desc => 'Create Github repository and add remote origin pointed to repo'
 
+    class_option :bootstrap, :type => :boolean, :aliases => '-b',
+      :default => false, :desc => 'Include bootstrap 3'
+
     class_option :devise, :type => :boolean, :aliases => '-D', :default => true,
       :desc => 'Include and generate devise'
 
-    class_option :devise_model, :type => :string, :aliases => '-M', :default => 'User',
-      :desc => 'Name of devise model to generate'
+    class_option :devise_model, :type => :string, :aliases => '-M',
+      :default => 'User', :desc => 'Name of devise model to generate'
 
-    class_option :skip_test_unit, :type => :boolean, :aliases => '-T', :default => true,
-      :desc => 'Skip Test::Unit files'
+    class_option :skip_test_unit, :type => :boolean, :aliases => '-T',
+      :default => true, :desc => 'Skip Test::Unit files'
 
     def finish_template
       invoke :blueberry_customization

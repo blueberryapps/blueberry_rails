@@ -1,6 +1,9 @@
 source 'https://rubygems.org'
 
 gem 'airbrake'
+<% if options[:bootstrap] -%>
+gem 'bootstrap-sass'
+<% end -%>
 gem 'coffee-rails', '~> 4.0.0'
 <% if options[:devise] -%>
 gem 'devise'
