@@ -127,8 +127,8 @@ module BlueberryRails
 
     def remove_routes_comment_lines
       replace_in_file 'config/routes.rb',
-                      /Application\.routes\.draw do.*end/m,
-                      "Application.routes.draw do\nend"
+                      /Rails.application\.routes\.draw do.*end/m,
+                      "Rails.application.routes.draw do\nend"
     end
 
     def install_devise

@@ -38,7 +38,6 @@ class BlueberryRailsTest < Minitest::Unit::TestCase
     Dir.chdir(project_name) do
       cmd 'bundle exec rake db:create'
       cmd 'bundle exec rake db:migrate'
-      cmd 'bundle exec rake db:test:prepare'
       cmd('bundle exec rake')
     end
   end
