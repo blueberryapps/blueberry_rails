@@ -122,7 +122,13 @@ module BlueberryRails
     end
 
     def add_ruby_version_file
-      add_file '.ruby-version', "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}"
+      current_version = RUBY_VERSION.split('.').map(&:to_i)
+      version = if current_version[0] >= 2 && current_version[1] >= 0
+                  RUBY_VERSION
+                else
+                  "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}"
+                end
+      add_file '.ruby-version', version
     end
 
     def remove_routes_comment_lines
@@ -137,7 +143,7 @@ module BlueberryRails
       remove_routes_comment_lines
       inject_into_file 'config/routes.rb',
                        "  root to: 'root#index'\n",
-                       after: "#{app_const}.routes.draw do\n"
+                       after: "Rails.application.routes.draw do\n"
       if options[:devise_model].present?
         generate 'devise', options[:devise_model]
       end
