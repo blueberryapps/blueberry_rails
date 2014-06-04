@@ -59,6 +59,10 @@ module BlueberryRails
         force: true
     end
 
+    def create_pryrc
+      copy_file 'pryrc.rb', '.pryrc'
+    end
+
     def remove_turbolinks
       replace_in_file 'app/assets/javascripts/application.js',
         /\/\/= require turbolinks\n/,

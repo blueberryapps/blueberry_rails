@@ -4,6 +4,7 @@
 *.swp
 .bundle
 .sass-cache/
+.pry_history
 coverage/*
 config/database.yml
 db/*.sqlite3
