@@ -185,5 +185,20 @@ module BlueberryRails
       run 'git init'
     end
 
+    def create_modules_app_directories
+      empty_directory 'app/modules'
+      empty_directory 'spec/modules'
+    end
+
+    def create_workers_app_directories
+      empty_directory 'app/workers'
+      empty_directory 'spec/workers'
+    end
+
+    def create_validations_app_directories
+      empty_directory 'app/validations'
+      empty_directory 'spec/validations'
+    end
+
   end
 end
