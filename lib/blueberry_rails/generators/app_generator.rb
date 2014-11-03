@@ -92,6 +92,7 @@ module BlueberryRails
       build :disable_xml_params
       build :setup_mailer_hosts
       build :remove_turbolinks
+      build :create_pryrc
       build :add_ruby_version_file
     end
 
