@@ -121,6 +121,10 @@ module BlueberryRails
       inject_into_class 'config/application.rb', 'Application', config
     end
 
+    def configure_travis
+      template 'travis.yml.erb', '.travis.yml'
+    end
+
     def add_ruby_version_file
       current_version = RUBY_VERSION.split('.').map(&:to_i)
       version = if current_version[0] >= 2 && current_version[1] >= 0

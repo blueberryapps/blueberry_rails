@@ -72,6 +72,7 @@ module BlueberryRails
       build :configure_rspec
       build :setup_rspec_support_files
       build :test_factories_first
+      build :configure_travis
       build :init_guard
     end
 
