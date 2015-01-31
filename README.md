@@ -28,7 +28,7 @@ Blueberry Rails template contains following gems by default:
 Testing related:
 
 * [Capybara](https://github.com/jnicklas/capybara) for acceptance testing
-* [Guard](https://github.com/guard/guard-rails) for automatically running specs
+* [Guard](https://github.com/ranmocy/guard-rails) for automatically running specs
 * [Factory Girl](https://github.com/rspec/rspec-rails) as a fixtures replacement
 * [Rspec](https://github.com/rspec/rspec-rails)
 
