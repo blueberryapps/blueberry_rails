@@ -88,7 +88,7 @@ module BlueberryRails
     end
 
     def configure_app
-      build :replace_secret_token
+      build :secret_token
       build :disable_xml_params
       build :setup_mailer_hosts
       build :remove_turbolinks
