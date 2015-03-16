@@ -4,18 +4,19 @@ module BlueberryRails
     include BlueberryRails::ActionHelpers
 
     def readme
-      template 'README.md.erb', 'README.md'
+      copy_file 'README.md', 'README.md'
     end
 
-    def replace_gemfile
-      remove_file 'Gemfile'
+    def gitignore
+      copy_file 'gitignore_custom', '.gitignore'
+    end
+
+    def gemfile
       template 'Gemfile_custom.erb', 'Gemfile'
     end
 
-    def replace_secret_token
-      template 'secret_token.rb.erb',
-        'config/initializers/secret_token.rb',
-        force: true
+    def secret_token
+      template 'secret_token.rb.erb', 'config/initializers/secret_token.rb'
     end
 
     def disable_xml_params
@@ -54,9 +55,7 @@ module BlueberryRails
 
     def create_application_layout
       remove_file 'app/views/layouts/application.html.erb'
-      template 'layout.html.slim.erb',
-        'app/views/layouts/application.html.slim',
-        force: true
+      copy_file 'layout.html.slim', 'app/views/layouts/application.html.slim'
     end
 
     def create_pryrc
@@ -78,8 +77,7 @@ module BlueberryRails
     end
 
     def configure_rspec
-      remove_file 'spec/spec_helper.rb'
-      copy_file 'spec_helper.rb', 'spec/spec_helper.rb'
+      copy_file 'spec_helper.rb', 'spec/spec_helper.rb', force: true
     end
 
     def test_factories_first
@@ -158,7 +156,7 @@ module BlueberryRails
     end
 
     def setup_capistrano
-      template 'Capfile', 'Capfile'
+      copy_file 'Capfile', 'Capfile'
       template 'deploy.rb.erb', 'config/deploy.rb'
       template 'deploy_production.rb.erb', 'config/deploy/production.rb'
       template 'deploy_staging.rb.erb', 'config/deploy/staging.rb'
@@ -175,17 +173,16 @@ module BlueberryRails
 
     def replace_users_factory
       remove_file 'spec/factories/users.rb'
-      template 'users_factory.rb', 'spec/factories/users.rb'
+      copy_file 'users_factory.rb', 'spec/factories/users.rb'
     end
 
     def replace_root_controller_spec
       remove_file 'spec/controllers/root_controller_spec.rb'
-      template 'root_controller_spec.rb', 'spec/controllers/root_controller_spec.rb'
+      copy_file 'root_controller_spec.rb',
+                'spec/controllers/root_controller_spec.rb'
     end
 
     def setup_gitignore
-      remove_file '.gitignore'
-      copy_file 'gitignore', '.gitignore'
       [ 'spec/lib',
         'spec/controllers',
         'spec/features',
