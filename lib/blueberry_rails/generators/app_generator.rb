@@ -101,6 +101,8 @@ module BlueberryRails
     end
 
     def setup_gems
+      say 'Setting up SimpleForm'
+      build :configure_simple_form
       if options[:devise]
         say 'Setting up devise'
         build :install_devise
