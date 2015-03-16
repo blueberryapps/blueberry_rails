@@ -165,6 +165,14 @@ module BlueberryRails
       template 'capistrano_dotenv.cap', 'lib/capistrano/tasks/dotenv.cap'
     end
 
+    def configure_simple_form
+      if options[:bootstrap]
+        generate 'simple_form:install --bootstrap'
+      else
+        generate 'simple_form:install'
+      end
+    end
+
     def replace_users_factory
       remove_file 'spec/factories/users.rb'
       template 'users_factory.rb', 'spec/factories/users.rb'
