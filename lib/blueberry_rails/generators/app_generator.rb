@@ -94,6 +94,7 @@ module BlueberryRails
       build :remove_turbolinks
       build :create_pryrc
       build :add_ruby_version_file
+      build :hound_config
     end
 
     def remove_routes_comment_lines

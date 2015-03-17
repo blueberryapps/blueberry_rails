@@ -23,6 +23,11 @@ module BlueberryRails
       copy_file 'disable_xml_params.rb', 'config/initializers/disable_xml_params.rb'
     end
 
+    def hound_config
+      copy_file '../.hound.yml', '.hound.yml'
+      copy_file '../.rubocop.yml', '.rubocop.yml'
+    end
+
     def setup_mailer_hosts
       action_mailer_host 'development', "#{app_name}.dev"
       action_mailer_host 'test', 'www.example.com'
