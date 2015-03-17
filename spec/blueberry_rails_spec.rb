@@ -22,6 +22,7 @@ class BlueberryRailsTest < Minitest::Test
     assert_exist_file 'config/initializers/simple_form.rb'
     assert_exist_file '.hound.yml'
     assert_exist_file '.rubocop.yml'
+    assert_exist_file '.rspec'
     assert_file_have_content 'README.md', 'Test Project'
     assert run_rake
   end

@@ -25,3 +25,4 @@ end
 
 Capybara.javascript_driver = :poltergeist
 
+WebMock.disable_net_connect!(allow_localhost: true, allow: 'codeclimate.com')
