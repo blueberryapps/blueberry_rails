@@ -135,6 +135,12 @@ module BlueberryRails
       inject_into_class 'config/application.rb', 'Application', config
     end
 
+    def configure_i18n_logger
+      configure_environment 'development',
+                            "# I18n debug\n  I18nLogger = ActiveSupport::" \
+                            "Logger.new(Rails.root.join('log/i18n.log'))"
+    end
+
     def configure_travis
       template 'travis.yml.erb', '.travis.yml'
     end
