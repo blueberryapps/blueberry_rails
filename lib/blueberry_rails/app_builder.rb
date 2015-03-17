@@ -4,7 +4,7 @@ module BlueberryRails
     include BlueberryRails::ActionHelpers
 
     def readme
-      copy_file 'README.md', 'README.md'
+      template 'README.md.erb', 'README.md'
     end
 
     def gitignore
