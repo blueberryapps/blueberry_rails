@@ -1,6 +1,6 @@
 # Blueberry Rails [![Build Status](https://secure.travis-ci.org/blueberryapps/blueberry_rails.png?branch=master)](http://travis-ci.org/blueberryapps/blueberry_rails)
 
-A Rails application template used at Blueberry Apps. 
+A Rails application template used at Blueberry Apps.
 
 ## Installation
 
@@ -11,6 +11,20 @@ Install the gem:
 Then you can run
 
     $ blueberry_rails newproject
+
+### Available options
+
+Twitter bootstrap
+
+    --bootstrap
+
+Devise
+
+    --devise
+
+Devise model
+
+    --devise_model User
 
 ## Gems
 
@@ -41,7 +55,7 @@ Testing related:
 
 ## Credits
 
-Based on [suspenders](https://github.com/thoughtbot/suspenders/blob/master/README.md) 
+Based on [suspenders](https://github.com/thoughtbot/suspenders/blob/master/README.md)
 gem by [thoughtbot](http://thoughtbot.com/community).
 
 ## Contributing
