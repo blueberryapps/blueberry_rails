@@ -44,8 +44,9 @@ group :staging, :production do
 end
 
 group :test do
-  gem 'poltergeist', '>= 1.5.0'
+  gem 'capybara-screenshot'
   gem 'database_cleaner'
+  gem 'poltergeist', '>= 1.5.0'
   gem 'simplecov', '~> 0.9.1', require: false
 end
 

@@ -79,6 +79,13 @@ module BlueberryRails
 
     def generate_rspec
       generate 'rspec:install'
+
+      inject_into_file 'spec/rails_helper.rb',
+                       "\n# Screenshots\n" \
+                       "require 'capybara-screenshot/rspec'\n" \
+                       "Capybara::Screenshot.autosave_on_failure =\n" \
+                       "  (ENV['SCR'] || ENV['AUTO_SCREENSHOT']) == '1'\n",
+                       after: "Rails is not loaded until this point!\n"
     end
 
     def configure_rspec
