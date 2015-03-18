@@ -36,7 +36,15 @@ module BlueberryRailsHelpers
     File.expand_path('../../../', __FILE__)
   end
 
-  def assert_exist_file(*path)
-    assert File.exists?(File.join(project_path, *path))
+  def assert_exist_file(path)
+    assert File.exists?(project_file(path))
+  end
+
+  def assert_file_have_content(path, content)
+    assert File.read(project_file(path)).include?(content)
+  end
+
+  def project_file(path)
+    File.join(project_path, path)
   end
 end

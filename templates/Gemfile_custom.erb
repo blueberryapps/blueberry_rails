@@ -21,6 +21,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'unicorn'
 
 group :development do
+  gem 'awesome_print'
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'capistrano', '~> 3.0.0'
@@ -30,12 +31,17 @@ group :development do
   gem 'guard-rspec'
   gem 'mailcatcher'
   gem 'pry-rails'
+  gem 'quiet_assets'
+  gem 'rails-i18n-debug', github: 'XeeD/rails-i18n-debug'
+  gem 'rubocop', require: false
   gem 'spring'
-  gem 'web-console', '~> 2.0'
+  gem 'spring-commands-rspec'
 end
 
 group :development, :test do
   gem 'factory_girl_rails'
+  gem 'pry-byebug'
+  gem 'pry-doc'
   gem 'rspec-rails', '>= 3.1'
 end
 
@@ -44,8 +50,11 @@ group :staging, :production do
 end
 
 group :test do
-  gem 'poltergeist', '>= 1.5.0'
+  gem 'capybara-screenshot'
   gem 'database_cleaner'
+  gem 'launchy'
+  gem 'poltergeist', '>= 1.5.0'
   gem 'simplecov', '~> 0.9.1', require: false
+  gem 'webmock'
 end
 

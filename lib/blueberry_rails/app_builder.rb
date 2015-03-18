@@ -4,7 +4,7 @@ module BlueberryRails
     include BlueberryRails::ActionHelpers
 
     def readme
-      copy_file 'README.md', 'README.md'
+      template 'README.md.erb', 'README.md'
     end
 
     def gitignore
@@ -21,6 +21,11 @@ module BlueberryRails
 
     def disable_xml_params
       copy_file 'disable_xml_params.rb', 'config/initializers/disable_xml_params.rb'
+    end
+
+    def hound_config
+      copy_file '../.hound.yml', '.hound.yml'
+      copy_file '../.rubocop.yml', '.rubocop.yml'
     end
 
     def setup_mailer_hosts
@@ -74,6 +79,13 @@ module BlueberryRails
 
     def generate_rspec
       generate 'rspec:install'
+
+      inject_into_file 'spec/rails_helper.rb',
+                       "\n# Screenshots\n" \
+                       "require 'capybara-screenshot/rspec'\n" \
+                       "Capybara::Screenshot.autosave_on_failure =\n" \
+                       "  (ENV['SCR'] || ENV['AUTO_SCREENSHOT']) == '1'\n",
+                       after: "Rails is not loaded until this point!\n"
     end
 
     def configure_rspec
@@ -121,6 +133,12 @@ module BlueberryRails
       RUBY
 
       inject_into_class 'config/application.rb', 'Application', config
+    end
+
+    def configure_i18n_logger
+      configure_environment 'development',
+                            "# I18n debug\n  I18nLogger = ActiveSupport::" \
+                            "Logger.new(Rails.root.join('log/i18n.log'))"
     end
 
     def configure_travis

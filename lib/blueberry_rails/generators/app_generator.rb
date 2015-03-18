@@ -63,6 +63,7 @@ module BlueberryRails
       say 'Setting up the development environment'
       build :configure_generators
       build :raise_on_unpermitted_parameters
+      build :configure_i18n_logger
       build :configure_mailcatcher
     end
 
@@ -94,6 +95,7 @@ module BlueberryRails
       build :remove_turbolinks
       build :create_pryrc
       build :add_ruby_version_file
+      build :hound_config
     end
 
     def remove_routes_comment_lines
