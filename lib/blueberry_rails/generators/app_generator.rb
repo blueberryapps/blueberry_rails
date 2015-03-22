@@ -40,6 +40,7 @@ module BlueberryRails
       invoke :remove_routes_comment_lines
       invoke :setup_gems
       invoke :fix_specs
+      invoke :create_additional_app_directories
       invoke :setup_git
     end
 
@@ -124,6 +125,12 @@ module BlueberryRails
       build :init_git
     end
 
+    def create_additional_app_directories
+      say 'Creating additional app directories'
+      build :create_modules_app_directories
+      build :create_workers_app_directories
+      build :create_validations_app_directories
+    end
 
     def run_bundle
     end

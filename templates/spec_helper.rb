@@ -1,5 +1,11 @@
 require 'simplecov'
-SimpleCov.start 'rails'
+SimpleCov.start 'rails' do
+  add_filter "/lib/tasks"
+  add_filter ".bundle"
+  add_group 'Modules',    'app/modules'
+  add_group 'Validators', 'app/validators'
+  add_group 'Workers',    'app/workers'
+end
 
 ENV['RAILS_ENV'] = 'test'
 
