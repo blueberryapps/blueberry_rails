@@ -26,6 +26,10 @@ Devise model
 
     --devise_model User
 
+Use Gulp instead of Asset Pipeline
+
+    --gulp
+
 ## Gems
 
 Blueberry Rails template contains following gems by default:
@@ -45,6 +49,45 @@ Testing related:
 * [Guard](https://github.com/ranmocy/guard-rails) for automatically running specs
 * [Factory Girl](https://github.com/rspec/rspec-rails) as a fixtures replacement
 * [Rspec](https://github.com/rspec/rspec-rails)
+
+## Gulp
+
+Based on [Gulp on Rails: Replacing the Asset Pipeline](http://viget.com/extend/gulp-rails-asset-pipeline) and [corresponding  GitHub repository](https://github.com/vigetlabs/gulp-rails-pipeline).
+
+    $ blueberry_rails newproject --gulp
+    $ npm install
+
+Default Gulp task, compiles stylesheets/javascripts and starts BrowserSync (for frontend dev)
+
+    $ gulp
+
+Compile all assets w/o BrowserSync (for backend dev)
+
+    $ gulp development
+
+Generate production ready assets (including fingerprinting)
+
+    $ gulp build
+
+Start BrowserSync
+
+    $ gulp watch
+
+Optimize image size
+
+    $ gulp images
+
+Generate font icons from SVGs
+
+    $ gulp fontIcons
+
+Add fingerprints to assets
+
+    $ gulp rev
+
+Remove all assets
+
+    $ gulp clean
 
 ## Other great stuff
 
