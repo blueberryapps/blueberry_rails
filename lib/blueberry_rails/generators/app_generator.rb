@@ -4,25 +4,33 @@ require 'rails/generators/rails/app/app_generator'
 module BlueberryRails
   class AppGenerator < Rails::Generators::AppGenerator
 
-    class_option :database, :type => :string, :aliases => '-d',
-      :default => 'postgresql',
-      :desc => "Preconfigure for selected database " +
-               "(options: #{DATABASES.join('/')})"
+    class_option :database, type: :string, aliases: '-d', default: 'postgresql',
+      desc: "Preconfigure for selected database " \
+            "(options: #{DATABASES.join('/')})"
 
     # class_option :github, :type => :string, :aliases => '-G', :default => nil,
-    #   :desc => 'Create Github repository and add remote origin pointed to repo'
+    #  :desc => 'Create Github repository and add remote origin pointed to repo'
 
-    class_option :bootstrap, :type => :boolean, :aliases => '-b',
-      :default => false, :desc => 'Include bootstrap 3'
+    class_option :bootstrap, type: :boolean, aliases: '-b', default: false,
+      desc: 'Include bootstrap 3'
 
-    class_option :devise, :type => :boolean, :aliases => '-D', :default => true,
-      :desc => 'Include and generate devise'
+    class_option :devise, type: :boolean, aliases: '-D', default: true,
+      desc: 'Include and generate devise'
 
-    class_option :devise_model, :type => :string, :aliases => '-M',
-      :default => 'User', :desc => 'Name of devise model to generate'
+    class_option :devise_model, type: :string, aliases: '-M', default: 'User',
+      desc: 'Name of devise model to generate'
 
-    class_option :skip_test_unit, :type => :boolean, :aliases => '-T',
-      :default => true, :desc => 'Skip Test::Unit files'
+    class_option :skip_test_unit, type: :boolean, aliases: '-T', default: true,
+      desc: 'Skip Test::Unit files'
+
+    class_option :skip_turbolinks, type: :boolean, default: true,
+      desc: "Skip turbolinks gem"
+
+    class_option :skip_bundle, type: :boolean, aliases: "-B", default: true,
+      desc: "Don't run bundle install"
+
+    class_option :gulp, type: :boolean, aliases: '-g', default: false,
+      desc: 'Include Gulp asset pipeline'
 
     def finish_template
       invoke :blueberry_customization
@@ -41,11 +49,10 @@ module BlueberryRails
       invoke :setup_gems
       invoke :fix_specs
       invoke :setup_git
+      invoke :setup_gulp
     end
 
     def customize_gemfile
-      build :replace_gemfile
-      build :set_ruby_to_version_being_used
       bundle_command 'install'
     end
 
@@ -92,7 +99,6 @@ module BlueberryRails
       build :secret_token
       build :disable_xml_params
       build :setup_mailer_hosts
-      build :remove_turbolinks
       build :create_pryrc
       build :add_ruby_version_file
       build :hound_config
@@ -124,6 +130,12 @@ module BlueberryRails
       build :init_git
     end
 
+    def setup_gulp
+      if options[:gulp]
+        say 'Adding Gulp asset pipeline'
+        build :gulp_files
+      end
+    end
 
     def run_bundle
     end
@@ -133,7 +145,6 @@ module BlueberryRails
     def get_builder_class
       BlueberryRails::AppBuilder
     end
-
   end
 end
 

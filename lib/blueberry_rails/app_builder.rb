@@ -8,7 +8,7 @@ module BlueberryRails
     end
 
     def gitignore
-      copy_file 'gitignore_custom', '.gitignore'
+      template 'gitignore_custom.erb', '.gitignore'
     end
 
     def gemfile
@@ -20,7 +20,8 @@ module BlueberryRails
     end
 
     def disable_xml_params
-      copy_file 'disable_xml_params.rb', 'config/initializers/disable_xml_params.rb'
+      copy_file 'disable_xml_params.rb',
+                'config/initializers/disable_xml_params.rb'
     end
 
     def hound_config
@@ -33,11 +34,6 @@ module BlueberryRails
       action_mailer_host 'test', 'www.example.com'
       action_mailer_host 'staging', "staging.#{app_name}.com"
       action_mailer_host 'production', "#{app_name}.com"
-    end
-
-    def set_ruby_to_version_being_used
-      inject_into_file 'Gemfile', "\n\nruby '#{RUBY_VERSION}'",
-      after: /source 'https:\/\/rubygems.org'/
     end
 
     def use_postgres_config_template
@@ -65,12 +61,6 @@ module BlueberryRails
 
     def create_pryrc
       copy_file 'pryrc.rb', '.pryrc'
-    end
-
-    def remove_turbolinks
-      replace_in_file 'app/assets/javascripts/application.js',
-        /\/\/= require turbolinks\n/,
-        ''
     end
 
     def create_database
@@ -104,7 +94,6 @@ module BlueberryRails
     def init_guard
       bundle_command 'exec guard init'
     end
-
 
     def raise_on_unpermitted_parameters
       configure_environment 'development',
@@ -214,6 +203,37 @@ module BlueberryRails
 
     def init_git
       run 'git init'
+    end
+
+    # Gulp
+    def gulp_files
+      copy_file 'gulp/gulp_helper.rb', 'app/helpers/gulp_helper.rb'
+      remove_file 'app/assets/stylesheets/application.css'
+      copy_file 'gulp/application.sass',
+                'app/assets/stylesheets/application.sass'
+      remove_file 'app/assets/javascripts/application.js'
+      copy_file 'gulp/application.js.coffee',
+                'app/assets/javascripts/application.js.coffee'
+
+      application do
+        "# Make public assets requireable in manifest files\n    "  \
+        "config.assets.paths << Rails.root.join('public', 'assets', 'stylesheets')\n    " \
+        "config.assets.paths << Rails.root.join('public', 'assets', 'javascripts')\n"
+      end
+
+      replace_in_file 'config/environments/development.rb',
+                      'config.assets.digest = true',
+                      'config.assets.digest = false'
+
+      copy_file 'gulp/rev_manifest.rb', 'config/initializers/rev_manifest.rb'
+      copy_file 'gulp/global.coffee',   'gulp/assets/javascripts/global.coffee'
+      copy_file 'gulp/message.coffee',  'gulp/assets/javascripts/message.coffee'
+      copy_file 'gulp/global.sass',     'gulp/assets/stylesheets/global.sass'
+      copy_file 'gulp/config.coffee'
+      directory 'gulp/tasks'
+      directory 'gulp/util'
+      copy_file 'gulp/gulpfile.js',  'gulpfile.js'
+      copy_file 'gulp/package.json', 'package.json'
     end
 
   end

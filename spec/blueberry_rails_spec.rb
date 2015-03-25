@@ -34,4 +34,15 @@ class BlueberryRailsTest < Minitest::Test
     assert_exist_file 'config/initializers/simple_form_bootstrap.rb'
     assert run_rake
   end
+
+  def test_rake_runs_with_gulp_option
+    create_project '--gulp'
+
+    assert_file_have_content 'config/environments/development.rb',
+                             'config.assets.digest = false'
+    assert_exist_file 'gulp/tasks/default.coffee'
+    assert_exist_file 'gulpfile.js'
+    assert_exist_file 'package.json'
+    assert run_rake
+  end
 end

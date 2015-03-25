@@ -15,4 +15,7 @@ rerun.txt
 tags
 tmp/*
 tmp/**/*
-
+<% if options[:gulp] -%>
+node_modules
+/public/assets/*
+<% end -%>
