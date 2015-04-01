@@ -54,6 +54,11 @@ Testing related:
 
 Based on [Gulp on Rails: Replacing the Asset Pipeline](http://viget.com/extend/gulp-rails-asset-pipeline) and [corresponding  GitHub repository](https://github.com/vigetlabs/gulp-rails-pipeline).
 
+Additional articles
+* [Gulp - a modern approach to asset pipeline for Rails developers](http://blog.arkency.com/2015/03/gulp-modern-approach-to-asset-pipeline-for-rails-developers/)
+
+### Usage
+
     $ blueberry_rails newproject --gulp
     $ npm install
 
