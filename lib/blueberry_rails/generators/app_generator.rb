@@ -32,6 +32,9 @@ module BlueberryRails
     class_option :gulp, type: :boolean, aliases: '-g', default: false,
       desc: 'Include Gulp asset pipeline'
 
+    class_option :capistrano, type: :boolean, aliases: '-c', default: false,
+      desc: 'Include Capistrano'
+
     def finish_template
       invoke :blueberry_customization
       super
@@ -47,7 +50,6 @@ module BlueberryRails
       invoke :configure_app
       invoke :remove_routes_comment_lines
       invoke :setup_gems
-      invoke :fix_specs
       invoke :setup_git
       invoke :setup_gulp
     end
@@ -114,14 +116,13 @@ module BlueberryRails
       if options[:devise]
         say 'Setting up devise'
         build :install_devise
+        build :replace_users_factory
+        build :replace_root_controller_spec
       end
-      say 'Setting up Capistrano'
-      build :setup_capistrano
-    end
-
-    def fix_specs
-      build :replace_users_factory
-      build :replace_root_controller_spec
+      if options[:capistrano]
+        say 'Setting up Capistrano'
+        build :setup_capistrano
+      end
     end
 
     def setup_git
