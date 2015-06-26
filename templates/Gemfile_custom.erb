@@ -28,10 +28,12 @@ group :development do
   gem 'awesome_print'
   gem 'better_errors'
   gem 'binding_of_caller'
+<% if options[:capistrano] -%>
   gem 'capistrano', '~> 3.0.0'
   gem 'capistrano-bundler'
   gem 'capistrano-rails'
   gem 'capistrano-rbenv'
+<% end -%>
   gem 'guard-rspec'
   gem 'mailcatcher'
   gem 'pry-rails'
@@ -58,7 +60,7 @@ group :test do
   gem 'database_cleaner'
   gem 'launchy'
   gem 'poltergeist', '>= 1.5.0'
-  gem 'simplecov', '~> 0.9.1', require: false
+  gem 'simplecov', require: false
   gem 'webmock'
 end
 
