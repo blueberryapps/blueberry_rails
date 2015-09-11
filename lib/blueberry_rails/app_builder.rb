@@ -89,6 +89,7 @@ module BlueberryRails
     def setup_rspec_support_files
       copy_file 'factory_girl_syntax.rb', 'spec/support/factory_girl.rb'
       copy_file 'database_cleaner_setup.rb', 'spec/support/database_cleaner.rb'
+      copy_file 'mail_body_helpers.rb', 'spec/mixins/mail_body_helpers.rb'
     end
 
     def init_guard
