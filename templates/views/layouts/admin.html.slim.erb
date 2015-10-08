@@ -1,0 +1,21 @@
+doctype html
+html
+  head
+    = metamagic site: 'Admin - <%= app_name %>',
+      title: [:title, :site],
+      separator: ' – '
+    meta charset='utf-8'
+    meta name='viewport' content='width=device-width, initial-scale=1.0'
+    = render 'favicon'
+    = stylesheet_link_tag :admin, media: 'all'
+    = csrf_meta_tags
+
+  body class=body_class
+    = render 'admin/partials/menu'
+
+    .container
+      .row = render 'application/flashes'
+      = yield
+
+    = javascript_include_tag :admin
+    = yield :javascript

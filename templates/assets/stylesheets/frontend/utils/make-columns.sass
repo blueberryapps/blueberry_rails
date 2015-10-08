@@ -1,0 +1,16 @@
+$sizes: ("1": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "10": 10, "11": 11, "12": 12, "5col": 2.4, "10col": 1.2)
+
+=make-columns($args...)
+  @for $i from 1 through length($args)
+    $type: str-slice(nth($args, $i), 1, 2)
+    $size: map-get($sizes, str-slice(nth($args, $i), 3, str-length(nth($args, $i))))
+    @if $type == 'xs'
+      +make-xs-column($size)
+    @if $type == 'ms'
+      +make-ms-column($size)
+    @if $type == 'sm'
+      +make-sm-column($size)
+    @if $type == 'md'
+      +make-md-column($size)
+    @if $type == 'lg'
+      +make-lg-column($size)
