@@ -35,7 +35,13 @@ module BlueberryRails
     class_option :capistrano, type: :boolean, aliases: '-c', default: false,
       desc: 'Include Capistrano'
 
+    class_option :administration, type: :boolean, aliases: '-a', default: false,
+      desc: 'Include Admin part of application'
+
     def finish_template
+      if options[:administration] && (!options[:devise] || !options[:bootstrap])
+        raise 'Administration depends on bootstrap and devise!'
+      end
       invoke :blueberry_customization
       super
     end
@@ -47,11 +53,14 @@ module BlueberryRails
       invoke :setup_test_environment
       invoke :setup_staging_environment
       invoke :create_views
+      invoke :create_assets
       invoke :configure_app
       invoke :remove_routes_comment_lines
       invoke :setup_gems
       invoke :setup_git
       invoke :setup_gulp
+      invoke :setup_admin
+      invoke :rake_tasks
     end
 
     def customize_gemfile
@@ -91,10 +100,23 @@ module BlueberryRails
       build :setup_staging_environment
     end
 
+    def setup_admin
+      if options[:administration]
+        build :setup_admin
+      end
+    end
+
     def create_views
       build :create_partials_directory
-      build :create_shared_flashes
       build :create_application_layout
+    end
+
+    def create_assets
+      if options[:bootstrap]
+        build :copy_assets_directory
+      else
+        build :copy_print_style
+      end
     end
 
     def configure_app
@@ -104,6 +126,7 @@ module BlueberryRails
       build :create_pryrc
       build :add_ruby_version_file
       build :hound_config
+      build :configure_i18n
     end
 
     def remove_routes_comment_lines
@@ -136,6 +159,10 @@ module BlueberryRails
         say 'Adding Gulp asset pipeline'
         build :gulp_files
       end
+    end
+
+    def rake_tasks
+      build :copy_rake_tasks
     end
 
     def run_bundle

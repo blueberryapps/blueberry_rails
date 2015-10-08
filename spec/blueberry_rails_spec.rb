@@ -52,6 +52,16 @@ class BlueberryRailsTest < Minitest::Test
     assert run_rake
   end
 
+  def test_rake_runs_with_administration_option
+    create_project '--bootstrap --administration'
+
+    assert_exist_file 'app/controllers/admin/dashboard_controller.rb'
+    assert_exist_file 'app/views/admin/dashboard/show.html.slim'
+    assert_file_have_content 'config/routes.rb', 'namespace :admin'
+
+    assert run_rake
+  end
+
   def test_rake_runs_with_gulp_option
     create_project '--gulp'
 

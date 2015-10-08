@@ -20,5 +20,9 @@ module BlueberryRails
       File.open(path, "w") { |file| file.write(contents) }
     end
 
+    def rename_file(path_old, path_new)
+      File.rename File.join(destination_root, path_old),
+                  File.join(destination_root, path_new)
+    end
   end
 end
