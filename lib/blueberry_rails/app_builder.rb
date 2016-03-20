@@ -30,8 +30,8 @@ module BlueberryRails
     end
 
     def setup_mailer_hosts
-      action_mailer_host 'development', "#{app_name}.dev"
-      action_mailer_host 'test', 'www.example.com'
+      action_mailer_host 'development', "development.#{app_name}.com"
+      action_mailer_host 'test', "test.#{app_name}.com"
       action_mailer_host 'staging', "staging.#{app_name}.com"
       action_mailer_host 'production', "#{app_name}.com"
     end
@@ -44,19 +44,66 @@ module BlueberryRails
 
     def setup_staging_environment
       run 'cp config/environments/production.rb config/environments/staging.rb'
+
+      replace_in_file 'config/environments/staging.rb',
+                      'config.consider_all_requests_local       = false',
+                      'config.consider_all_requests_local       = true'
+    end
+
+    def setup_admin
+      directory 'admin_controllers', 'app/controllers/admin'
+      directory 'admin_views', 'app/views/admin'
+
+      template 'views/layouts/admin.html.slim.erb',
+               'app/views/layouts/admin.html.slim'
+
+      inject_into_file 'config/routes.rb',
+                       "\n  namespace :admin do\n" \
+                       "    root to: 'dashboard#show'\n" \
+                       "  end\n\n",
+                       before: "  root"
     end
 
     def create_partials_directory
-      empty_directory 'app/views/application'
-    end
-
-    def create_shared_flashes
-      copy_file '_flashes.html.slim', 'app/views/application/_flashes.html.slim'
+      directory 'views/application', 'app/views/application'
     end
 
     def create_application_layout
       remove_file 'app/views/layouts/application.html.erb'
-      copy_file 'layout.html.slim', 'app/views/layouts/application.html.slim'
+
+      template 'views/layouts/application.html.slim.erb',
+               'app/views/layouts/application.html.slim'
+
+      remove_file 'app/helpers/application_helper.rb'
+      copy_file 'helpers/application_helper.rb',
+                'app/helpers/application_helper.rb'
+
+      remove_file 'public/favicon.ico'
+      directory 'icons', 'public'
+    end
+
+    def copy_assets_directory
+      remove_file 'app/assets/stylesheets/application.css'
+      remove_file 'app/assets/javascripts/application.js'
+
+      directory 'assets', 'app/assets'
+
+      replace_in_file 'config/initializers/assets.rb',
+        '# Rails.application.config.assets.precompile += %w( search.js )',
+        'Rails.application.config.assets.precompile += %w( print.css ie.css )'
+
+      if options[:administration]
+        directory 'admin_assets', 'app/assets'
+
+        replace_in_file 'config/initializers/assets.rb',
+                        '.precompile += %w( ',
+                        '.precompile += %w( admin.css admin.js '
+      end
+    end
+
+    def copy_print_style
+      copy_file 'assets/stylesheets/print.sass',
+                'app/assets/stylesheets/print.sass'
     end
 
     def create_pryrc
@@ -125,6 +172,19 @@ module BlueberryRails
       inject_into_class 'config/application.rb', 'Application', config
     end
 
+    def configure_i18n
+      replace_in_file 'config/application.rb',
+                      "# config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]",
+                      "config.i18n.load_path += Dir[Rails.root.join 'config/locales/**/*.{rb,yml}']"
+
+      replace_in_file 'config/application.rb',
+                      '# config.i18n.default_locale = :de',
+                      "config.i18n.available_locales = [:cs, :en]\n    config.i18n.default_locale = :cs"
+
+      remove_file 'config/locales/en.yml'
+      directory 'locales', 'config/locales'
+    end
+
     def configure_i18n_logger
       configure_environment 'development',
                             "# I18n debug\n  I18nLogger = ActiveSupport::" \
@@ -142,7 +202,7 @@ module BlueberryRails
                 else
                   "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}"
                 end
-      add_file '.ruby-version', version
+      add_file '.ruby-version', "#{version}\n"
     end
 
     def remove_routes_comment_lines
@@ -161,6 +221,18 @@ module BlueberryRails
       if options[:devise_model].present?
         generate 'devise', options[:devise_model]
       end
+
+      if options[:administration]
+        generate 'devise', 'administrator'
+        replace_in_file 'app/models/administrator.rb',
+                        ' :registerable,',
+                        ''
+      end
+
+      copy_file 'cs.devise.yml', 'config/locales/cs/cs.devise.yml'
+
+      rename_file 'config/locales/devise.en.yml',
+                  'config/locales/en/en.devise.yml'
     end
 
     def setup_capistrano
@@ -177,6 +249,8 @@ module BlueberryRails
       else
         generate 'simple_form:install'
       end
+      rename_file 'config/locales/simple_form.en.yml',
+                  'config/locales/en/en.simple_form.yml'
     end
 
     def replace_users_factory
@@ -204,6 +278,10 @@ module BlueberryRails
 
     def init_git
       run 'git init'
+    end
+
+    def copy_rake_tasks
+      copy_file 'images.rake', 'lib/tasks/images.rake'
     end
 
     # Gulp
