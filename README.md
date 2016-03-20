@@ -1,3 +1,4 @@
+Test travis
 # Blueberry Rails [![Build Status](https://secure.travis-ci.org/blueberryapps/blueberry_rails.png?branch=master)](http://travis-ci.org/blueberryapps/blueberry_rails)
 
 A Rails application template used at Blueberry Apps.
@@ -113,4 +114,3 @@ gem by [thoughtbot](http://thoughtbot.com/community).
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
-
