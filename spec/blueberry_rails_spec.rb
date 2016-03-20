@@ -38,7 +38,7 @@ class BlueberryRailsTest < Minitest::Test
     assert_exist_file 'config/deploy/staging.rb'
   end
 
-  def test_rake_runs_with_capistrano_option
+  def test_rake_runs_with_no_devise_option
     create_project '--no-devise'
 
     assert run_rake
@@ -55,10 +55,10 @@ class BlueberryRailsTest < Minitest::Test
     assert run_rake
   end
 
-  def test_rake_runs_with_administration_option
+  def test_rake_runs_with_translation_engine_option
     create_project '--translation_engine'
 
-    assert_exist_file 'app/config/initializers/translation_engine.rb'
+    assert_exist_file 'config/initializers/translation_engine.rb'
     assert_file_have_content 'Gemfile', 'translation_engine'
 
     assert run_rake
@@ -75,7 +75,7 @@ class BlueberryRailsTest < Minitest::Test
   end
 
   def test_rake_runs_with_custom_errors_option
-    create_project '--custom_errors'
+    create_project '--custom-errors'
 
     assert_exist_file 'app/controllers/errors_controller.rb'
     assert_file_have_content 'config/application.rb', 'config.exceptions_app'

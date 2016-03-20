@@ -111,12 +111,14 @@ module BlueberryRails
     def copy_initializers
       if options[:translation_engine]
         copy_file 'config/initializers/translation_engine.rb',
-                  'app/config/initializers/translation_engine.rb'
+                  'config/initializers/translation_engine.rb'
       end
       if options[:bootstrap]
         copy_file 'config/initializers/simple_form_bootstrap.rb',
                   'config/initializers/simple_form_bootstrap.rb', force: true
       end
+      copy_file 'config/initializers/airbrake.rb',
+                'config/initializers/airbrake.rb'
     end
 
     def create_pryrc
@@ -318,12 +320,23 @@ module BlueberryRails
 
       inject_into_class 'config/application.rb', 'Application', config
 
+      remove_file 'public/404.html'
+      remove_file 'public/422.html'
+      remove_file 'public/500.html'
     end
 
     def copy_fontcustom_config
       copy_file 'fontcustom.yml', 'fontcustom.yml'
       copy_file 'assets/icons/_font_icons.scss',
                 'app/assets/icons/_font_icons.scss'
+    end
+
+    def configure_bin_setup
+
+      original = "# puts \"\\n== Copying sample files ==\"\n  # unless File.exist?(\"config/database.yml\")\n  #   system \"cp config/database.yml.sample config/database.yml\"\n  # end"
+      updated = "puts \"\\n== Copying sample files ==\"\n  unless File.exist?(\"config/database.yml\")\n    system \"cp config/database.yml.sample config/database.yml\"\n  end"
+
+      replace_in_file 'bin/setup', original, updated
     end
 
     # Gulp

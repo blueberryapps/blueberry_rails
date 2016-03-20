@@ -26,13 +26,13 @@ gem 'translation_engine',
 gem 'uglifier', '>= 1.3.0'
 gem 'unicorn'
 
-<% if options[:bootstrap] -%>
 source 'https://rails-assets.org' do
+<% if options[:bootstrap] -%>
   gem 'rails-assets-bootstrap-sass'
+<% end -%>
   gem 'rails-assets-jquery-ujs'
 end
 
-<% end -%>
 group :development do
   gem 'awesome_print'
   gem 'better_errors'

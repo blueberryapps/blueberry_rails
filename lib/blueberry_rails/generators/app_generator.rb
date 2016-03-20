@@ -158,6 +158,7 @@ module BlueberryRails
       build :add_ruby_version_file
       build :hound_config
       build :configure_i18n
+      build :configure_bin_setup
     end
 
     def remove_routes_comment_lines
