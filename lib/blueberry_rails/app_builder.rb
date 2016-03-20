@@ -79,7 +79,7 @@ module BlueberryRails
                 'app/helpers/application_helper.rb'
 
       remove_file 'public/favicon.ico'
-      directory 'icons', 'public'
+      directory 'public/icons', 'public'
     end
 
     def copy_assets_directory
@@ -87,6 +87,8 @@ module BlueberryRails
       remove_file 'app/assets/javascripts/application.js'
 
       directory 'assets', 'app/assets'
+
+      remove_file 'app/assets/icons'
 
       replace_in_file 'config/initializers/assets.rb',
         '# Rails.application.config.assets.precompile += %w( search.js )',
@@ -104,6 +106,17 @@ module BlueberryRails
     def copy_print_style
       copy_file 'assets/stylesheets/print.sass',
                 'app/assets/stylesheets/print.sass'
+    end
+
+    def copy_initializers
+      if options[:translation_engine]
+        copy_file 'config/initializers/translation_engine.rb',
+                  'app/config/initializers/translation_engine.rb'
+      end
+      if options[:bootstrap]
+        copy_file 'config/initializers/simple_form_bootstrap.rb',
+                  'config/initializers/simple_form_bootstrap.rb', force: true
+      end
     end
 
     def create_pryrc
@@ -126,17 +139,17 @@ module BlueberryRails
     end
 
     def configure_rspec
-      copy_file 'spec_helper.rb', 'spec/spec_helper.rb', force: true
+      copy_file 'spec/spec_helper.rb', 'spec/spec_helper.rb', force: true
     end
 
     def test_factories_first
-      copy_file 'factories_spec.rb', 'spec/models/factories_spec.rb'
+      copy_file 'spec/factories_spec.rb', 'spec/models/factories_spec.rb'
     end
 
     def setup_rspec_support_files
-      copy_file 'factory_girl_syntax.rb', 'spec/support/factory_girl.rb'
-      copy_file 'database_cleaner_setup.rb', 'spec/support/database_cleaner.rb'
-      copy_file 'mail_body_helpers.rb', 'spec/mixins/mail_body_helpers.rb'
+      copy_file 'spec/factory_girl_syntax.rb', 'spec/support/factory_girl.rb'
+      copy_file 'spec/database_cleaner_setup.rb', 'spec/support/database_cleaner.rb'
+      copy_file 'spec/mail_body_helpers.rb', 'spec/support/mixins/mail_body_helpers.rb'
     end
 
     def init_guard
@@ -229,7 +242,7 @@ module BlueberryRails
                         ''
       end
 
-      copy_file 'cs.devise.yml', 'config/locales/cs/cs.devise.yml'
+      copy_file 'locales/cs/cs.devise.yml', 'config/locales/cs/cs.devise.yml'
 
       rename_file 'config/locales/devise.en.yml',
                   'config/locales/en/en.devise.yml'
@@ -246,6 +259,11 @@ module BlueberryRails
     def configure_simple_form
       if options[:bootstrap]
         generate 'simple_form:install --bootstrap'
+
+        replace_in_file 'config/initializers/simple_form.rb',
+                        '# config.label_text = lambda { |label, required, explicit_label| "#{required} #{label}" }',
+                        'config.label_text = lambda { |label, required, explicit_label| "#{required} #{label}" }'
+
       else
         generate 'simple_form:install'
       end
@@ -254,14 +272,17 @@ module BlueberryRails
     end
 
     def replace_users_factory
-      remove_file 'spec/factories/users.rb'
-      copy_file 'users_factory.rb', 'spec/factories/users.rb'
+      copy_file 'spec/factories/users.rb',
+                'spec/factories/users.rb', force: true
+      if options[:administration]
+        copy_file 'spec/factories/administrators.rb',
+                  'spec/factories/administrators.rb', force: true
+      end
     end
 
     def replace_root_controller_spec
-      remove_file 'spec/controllers/root_controller_spec.rb'
-      copy_file 'root_controller_spec.rb',
-                'spec/controllers/root_controller_spec.rb'
+      copy_file 'spec/controllers/root_controller_spec.rb',
+                'spec/controllers/root_controller_spec.rb', force: true
     end
 
     def setup_gitignore
@@ -281,7 +302,28 @@ module BlueberryRails
     end
 
     def copy_rake_tasks
-      copy_file 'images.rake', 'lib/tasks/images.rake'
+      copy_file 'tasks/images.rake', 'lib/tasks/images.rake'
+      if options[:fontcustom]
+        copy_file 'tasks/icons.rake', 'lib/tasks/icons.rake'
+      end
+    end
+
+    def copy_custom_errors
+      copy_file 'controllers/errors_controller.rb', 'app/controllers/errors_controller.rb'
+
+      config = <<-RUBY
+    config.exceptions_app = self.routes
+
+      RUBY
+
+      inject_into_class 'config/application.rb', 'Application', config
+
+    end
+
+    def copy_fontcustom_config
+      copy_file 'fontcustom.yml', 'fontcustom.yml'
+      copy_file 'assets/icons/_font_icons.scss',
+                'app/assets/icons/_font_icons.scss'
     end
 
     # Gulp

@@ -1,0 +1,24 @@
+=centered($args...)
+  position: absolute
+  left: 50%
+  top: 50%
+  transform: translateX(-50%) translateY(-50%)
+
+=antialiasing($type:antialiased)
+  -webkit-font-smoothing: $type
+  font-smoothing: $type
+  font-smooth: always
+
+=pos($x, $y)
+  position: absolute
+  top: $x
+  left: $y
+
+=display-flex
+  display: flex
+  flex-wrap: wrap
+  align-items: flex-end
+  justify-content: flex-start
+  &:after,
+  &:before
+    display: none

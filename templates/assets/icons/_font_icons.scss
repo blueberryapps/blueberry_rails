@@ -1,0 +1,18 @@
+<%= font_face(url: "font-url", path: @font_path_alt) %>
+
+[data-icon]:before { content: attr(data-icon); }
+
+@mixin fontcustom {
+<%= glyph_properties %>
+}
+
+%fontcustom,
+[data-icon]:before,
+<%= glyph_selectors %> {
+<%= glyph_properties %>
+}
+
+<%= glyphs %>
+
+<% @glyphs.each do |name, value| %>
+$font-<%= font_name.gsub(/[^\w\d_]/, '-') %>-<%= name.to_s %>: "\<%= value[:codepoint].to_s(16) %>";<% end %>

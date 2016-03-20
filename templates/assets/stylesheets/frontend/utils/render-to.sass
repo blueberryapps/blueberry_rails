@@ -5,19 +5,23 @@ $md: "(min-width: #{$screen-md-min}) and (max-width: #{$screen-md-max})"
 $lg: "(min-width: #{$screen-lg-min})"
 
 =render-to($type...)
+  @if $type == "xs"
   @for $i from 1 through length($type)
     @if nth($type, $i) == xs
       @media #{$xs}
         @content
-    @if nth($type, $i) == sm
+    @else if nth($type, $i) == sm
       @media #{$sm}
         @content
-    @if nth($type, $i) == ms
+    @else if nth($type, $i) == ms
       @media #{$ms}
         @content
-    @if nth($type, $i) == md
+    @else if nth($type, $i) == md
       @media #{$md}
         @content
-    @if nth($type, $i) == lg
+    @else if nth($type, $i) == lg
       @media #{$lg}
+        @content
+    @else
+      @media (max-width: $type)
         @content

@@ -49,6 +49,18 @@ class BlueberryRailsTest < Minitest::Test
 
     assert_exist_file 'config/initializers/simple_form.rb'
     assert_exist_file 'config/initializers/simple_form_bootstrap.rb'
+
+    assert_file_have_content 'config/initializers/simple_form_bootstrap.rb', 'form-control-wrapper'
+
+    assert run_rake
+  end
+
+  def test_rake_runs_with_administration_option
+    create_project '--translation_engine'
+
+    assert_exist_file 'app/config/initializers/translation_engine.rb'
+    assert_file_have_content 'Gemfile', 'translation_engine'
+
     assert run_rake
   end
 
@@ -58,6 +70,25 @@ class BlueberryRailsTest < Minitest::Test
     assert_exist_file 'app/controllers/admin/dashboard_controller.rb'
     assert_exist_file 'app/views/admin/dashboard/show.html.slim'
     assert_file_have_content 'config/routes.rb', 'namespace :admin'
+
+    assert run_rake
+  end
+
+  def test_rake_runs_with_custom_errors_option
+    create_project '--custom_errors'
+
+    assert_exist_file 'app/controllers/errors_controller.rb'
+    assert_file_have_content 'config/application.rb', 'config.exceptions_app'
+
+    assert run_rake
+  end
+
+  def test_rake_runs_with_fontcustom_option
+    create_project '--fontcustom'
+
+    assert_exist_file 'lib/tasks/icons.rake'
+    assert_exist_file 'fontcustom.yml'
+    assert_exist_file "app/assets/icons/_font_icons.scss"
 
     assert run_rake
   end

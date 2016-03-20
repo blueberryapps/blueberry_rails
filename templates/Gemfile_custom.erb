@@ -2,7 +2,6 @@ source 'https://rubygems.org'
 
 ruby '<%= BlueberryRails::RUBY_VERSION %>'
 
-gem 'active_link_to'
 gem 'airbrake'
 <% if !options[:gulp] -%>
 gem 'autoprefixer-rails'
@@ -20,6 +19,10 @@ gem 'rails', '~> <%= BlueberryRails::RAILS_VERSION %>'
 gem 'sass-rails', '~> 5.0'
 gem 'simple_form'
 gem 'slim-rails'
+<% if options[:translation_engine] -%>
+gem 'translation_engine',
+  git: 'https://github.com/blueberryapps/translation-engine.git'
+<% end -%>
 gem 'uglifier', '>= 1.3.0'
 gem 'unicorn'
 
@@ -40,7 +43,7 @@ group :development do
   gem 'capistrano-rails'
   gem 'capistrano-rbenv'
 <% end -%>
-<% if options[:bootstrap] -%>
+<% if options[:fontcustom] -%>
   gem 'fontcustom'
 <% end -%>
   gem 'guard-rspec'
@@ -50,8 +53,11 @@ group :development do
   gem 'quiet_assets'
   gem 'rails-i18n-debug', github: 'XeeD/rails-i18n-debug'
   gem 'rubocop', require: false
-  gem 'spring'
   gem 'spring-commands-rspec'
+  gem 'spring'
+<% if options[:fontcustom] -%>
+  gem 'svg_optimizer'
+<% end -%>
 end
 
 group :development, :test do

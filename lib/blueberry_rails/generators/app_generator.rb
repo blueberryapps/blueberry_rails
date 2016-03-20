@@ -38,6 +38,15 @@ module BlueberryRails
     class_option :administration, type: :boolean, aliases: '-a', default: false,
       desc: 'Include Admin part of application'
 
+    class_option :fontcustom, type: :boolean, aliases: '-fc', default: false,
+      desc: 'Include Fontcustom'
+
+    class_option :translation_engine, type: :boolean, aliases: '-te', default: false,
+      desc: 'Include Tranlsation Engine'
+
+    class_option :custom_errors, type: :boolean, aliases: '-ce', default: false,
+      desc: 'Include Errors Controller'
+
     def finish_template
       if options[:administration] && (!options[:devise] || !options[:bootstrap])
         raise 'Administration depends on bootstrap and devise!'
@@ -61,6 +70,9 @@ module BlueberryRails
       invoke :setup_gulp
       invoke :setup_admin
       invoke :rake_tasks
+      invoke :setup_custom_errors
+      invoke :setup_initializers
+      invoke :setup_fontcustom
     end
 
     def customize_gemfile
@@ -100,9 +112,28 @@ module BlueberryRails
       build :setup_staging_environment
     end
 
+    def setup_initializers
+      say 'Setting up initializers'
+      build :copy_initializers
+    end
+
+    def setup_fontcustom
+      if options[:fontcustom]
+        say 'Setting up fontcustom'
+        build :copy_fontcustom_config
+      end
+    end
+
     def setup_admin
       if options[:administration]
         build :setup_admin
+      end
+    end
+
+    def setup_custom_errors
+      if options[:custom_errors]
+        say 'Setting up custom errors'
+        build :copy_custom_errors
       end
     end
 
@@ -175,4 +206,3 @@ module BlueberryRails
     end
   end
 end
-
