@@ -16,11 +16,11 @@ Then you can run
 
 Translation Engine
 
-    --translation_engine
+    --translation-engine
 
 Custom Erros
 
-    --custom_errors
+    --custom-errors
 
 Fontcustom
 
