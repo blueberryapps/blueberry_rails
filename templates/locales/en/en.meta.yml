@@ -1,0 +1,5 @@
+en:
+  root:
+    index:
+      meta_title: "Hello world!"
+      meta_description: "Blueberry Rails default project description"

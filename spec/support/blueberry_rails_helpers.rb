@@ -37,7 +37,7 @@ module BlueberryRailsHelpers
   end
 
   def assert_exist_file(path)
-    assert File.exists?(project_file(path))
+    assert File.exist?(project_file(path))
   end
 
   def assert_file_have_content(path, content)

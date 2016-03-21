@@ -14,6 +14,18 @@ Then you can run
 
 ### Available options
 
+Translation Engine
+
+    --translation_engine
+
+Custom Erros
+
+    --custom_errors
+
+Fontcustom
+
+    --fontncustom
+
 Twitter bootstrap
 
     --bootstrap
@@ -113,4 +125,3 @@ gem by [thoughtbot](http://thoughtbot.com/community).
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
-

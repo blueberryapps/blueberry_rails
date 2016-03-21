@@ -35,7 +35,22 @@ module BlueberryRails
     class_option :capistrano, type: :boolean, aliases: '-c', default: false,
       desc: 'Include Capistrano'
 
+    class_option :administration, type: :boolean, aliases: '-a', default: false,
+      desc: 'Include Admin part of application'
+
+    class_option :fontcustom, type: :boolean, aliases: '-fc', default: false,
+      desc: 'Include Fontcustom'
+
+    class_option :translation_engine, type: :boolean, aliases: '-te', default: false,
+      desc: 'Include Tranlsation Engine'
+
+    class_option :custom_errors, type: :boolean, aliases: '-ce', default: false,
+      desc: 'Include Errors Controller'
+
     def finish_template
+      if options[:administration] && (!options[:devise] || !options[:bootstrap])
+        raise 'Administration depends on bootstrap and devise!'
+      end
       invoke :blueberry_customization
       super
     end
@@ -47,11 +62,17 @@ module BlueberryRails
       invoke :setup_test_environment
       invoke :setup_staging_environment
       invoke :create_views
+      invoke :create_assets
       invoke :configure_app
       invoke :remove_routes_comment_lines
       invoke :setup_gems
       invoke :setup_git
       invoke :setup_gulp
+      invoke :setup_admin
+      invoke :rake_tasks
+      invoke :setup_custom_errors
+      invoke :setup_initializers
+      invoke :setup_fontcustom
     end
 
     def customize_gemfile
@@ -91,10 +112,42 @@ module BlueberryRails
       build :setup_staging_environment
     end
 
+    def setup_initializers
+      say 'Setting up initializers'
+      build :copy_initializers
+    end
+
+    def setup_fontcustom
+      if options[:fontcustom]
+        say 'Setting up fontcustom'
+        build :copy_fontcustom_config
+      end
+    end
+
+    def setup_admin
+      if options[:administration]
+        build :setup_admin
+      end
+    end
+
+    def setup_custom_errors
+      if options[:custom_errors]
+        say 'Setting up custom errors'
+        build :copy_custom_errors
+      end
+    end
+
     def create_views
       build :create_partials_directory
-      build :create_shared_flashes
       build :create_application_layout
+    end
+
+    def create_assets
+      if options[:bootstrap]
+        build :copy_assets_directory
+      else
+        build :copy_print_style
+      end
     end
 
     def configure_app
@@ -104,6 +157,8 @@ module BlueberryRails
       build :create_pryrc
       build :add_ruby_version_file
       build :hound_config
+      build :configure_i18n
+      build :configure_bin_setup
     end
 
     def remove_routes_comment_lines
@@ -138,6 +193,10 @@ module BlueberryRails
       end
     end
 
+    def rake_tasks
+      build :copy_rake_tasks
+    end
+
     def run_bundle
     end
 
@@ -148,4 +207,3 @@ module BlueberryRails
     end
   end
 end
-

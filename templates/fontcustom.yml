@@ -1,0 +1,22 @@
+font_name: icons
+font_design_size: 16
+font_em: 512
+font_ascent: 448
+font_descent: 64
+css_selector: .icon-{{glyph}}
+preprocessor_path: ""
+autowidth: false
+no_hash: true
+force: true
+debug: false
+quiet: false
+
+input:
+  vectors: app/assets/icons
+
+output:
+  fonts: app/assets/fonts
+  css: app/assets/stylesheets/frontend/base
+
+templates: [ _font_icons.scss ]
+

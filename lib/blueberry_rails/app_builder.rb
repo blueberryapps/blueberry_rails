@@ -30,8 +30,8 @@ module BlueberryRails
     end
 
     def setup_mailer_hosts
-      action_mailer_host 'development', "#{app_name}.dev"
-      action_mailer_host 'test', 'www.example.com'
+      action_mailer_host 'development', "development.#{app_name}.com"
+      action_mailer_host 'test', "test.#{app_name}.com"
       action_mailer_host 'staging', "staging.#{app_name}.com"
       action_mailer_host 'production', "#{app_name}.com"
     end
@@ -44,19 +44,81 @@ module BlueberryRails
 
     def setup_staging_environment
       run 'cp config/environments/production.rb config/environments/staging.rb'
+
+      replace_in_file 'config/environments/staging.rb',
+                      'config.consider_all_requests_local       = false',
+                      'config.consider_all_requests_local       = true'
+    end
+
+    def setup_admin
+      directory 'admin_controllers', 'app/controllers/admin'
+      directory 'admin_views', 'app/views/admin'
+
+      template 'views/layouts/admin.html.slim.erb',
+               'app/views/layouts/admin.html.slim'
+
+      inject_into_file 'config/routes.rb',
+                       "\n  namespace :admin do\n" \
+                       "    root to: 'dashboard#show'\n" \
+                       "  end\n\n",
+                       before: "  root"
     end
 
     def create_partials_directory
-      empty_directory 'app/views/application'
-    end
-
-    def create_shared_flashes
-      copy_file '_flashes.html.slim', 'app/views/application/_flashes.html.slim'
+      directory 'views/application', 'app/views/application'
     end
 
     def create_application_layout
       remove_file 'app/views/layouts/application.html.erb'
-      copy_file 'layout.html.slim', 'app/views/layouts/application.html.slim'
+
+      template 'views/layouts/application.html.slim.erb',
+               'app/views/layouts/application.html.slim'
+
+      remove_file 'app/helpers/application_helper.rb'
+      copy_file 'helpers/application_helper.rb',
+                'app/helpers/application_helper.rb'
+
+      remove_file 'public/favicon.ico'
+      directory 'public/icons', 'public'
+    end
+
+    def copy_assets_directory
+      remove_file 'app/assets/stylesheets/application.css'
+      remove_file 'app/assets/javascripts/application.js'
+
+      directory 'assets', 'app/assets'
+
+      remove_file 'app/assets/icons'
+
+      replace_in_file 'config/initializers/assets.rb',
+        '# Rails.application.config.assets.precompile += %w( search.js )',
+        'Rails.application.config.assets.precompile += %w( print.css ie.css )'
+
+      if options[:administration]
+        directory 'admin_assets', 'app/assets'
+
+        replace_in_file 'config/initializers/assets.rb',
+                        '.precompile += %w( ',
+                        '.precompile += %w( admin.css admin.js '
+      end
+    end
+
+    def copy_print_style
+      copy_file 'assets/stylesheets/print.sass',
+                'app/assets/stylesheets/print.sass'
+    end
+
+    def copy_initializers
+      if options[:translation_engine]
+        copy_file 'config/initializers/translation_engine.rb',
+                  'config/initializers/translation_engine.rb'
+      end
+      if options[:bootstrap]
+        copy_file 'config/initializers/simple_form_bootstrap.rb',
+                  'config/initializers/simple_form_bootstrap.rb', force: true
+      end
+      copy_file 'config/initializers/airbrake.rb',
+                'config/initializers/airbrake.rb'
     end
 
     def create_pryrc
@@ -79,17 +141,17 @@ module BlueberryRails
     end
 
     def configure_rspec
-      copy_file 'spec_helper.rb', 'spec/spec_helper.rb', force: true
+      copy_file 'spec/spec_helper.rb', 'spec/spec_helper.rb', force: true
     end
 
     def test_factories_first
-      copy_file 'factories_spec.rb', 'spec/models/factories_spec.rb'
+      copy_file 'spec/factories_spec.rb', 'spec/models/factories_spec.rb'
     end
 
     def setup_rspec_support_files
-      copy_file 'factory_girl_syntax.rb', 'spec/support/factory_girl.rb'
-      copy_file 'database_cleaner_setup.rb', 'spec/support/database_cleaner.rb'
-      copy_file 'mail_body_helpers.rb', 'spec/mixins/mail_body_helpers.rb'
+      copy_file 'spec/factory_girl_syntax.rb', 'spec/support/factory_girl.rb'
+      copy_file 'spec/database_cleaner_setup.rb', 'spec/support/database_cleaner.rb'
+      copy_file 'spec/mail_body_helpers.rb', 'spec/support/mixins/mail_body_helpers.rb'
     end
 
     def init_guard
@@ -125,6 +187,19 @@ module BlueberryRails
       inject_into_class 'config/application.rb', 'Application', config
     end
 
+    def configure_i18n
+      replace_in_file 'config/application.rb',
+                      "# config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]",
+                      "config.i18n.load_path += Dir[Rails.root.join 'config/locales/**/*.{rb,yml}']"
+
+      replace_in_file 'config/application.rb',
+                      '# config.i18n.default_locale = :de',
+                      "config.i18n.available_locales = [:cs, :en]\n    config.i18n.default_locale = :cs"
+
+      remove_file 'config/locales/en.yml'
+      directory 'locales', 'config/locales'
+    end
+
     def configure_i18n_logger
       configure_environment 'development',
                             "# I18n debug\n  I18nLogger = ActiveSupport::" \
@@ -142,7 +217,7 @@ module BlueberryRails
                 else
                   "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}"
                 end
-      add_file '.ruby-version', version
+      add_file '.ruby-version', "#{version}\n"
     end
 
     def remove_routes_comment_lines
@@ -161,6 +236,18 @@ module BlueberryRails
       if options[:devise_model].present?
         generate 'devise', options[:devise_model]
       end
+
+      if options[:administration]
+        generate 'devise', 'administrator'
+        replace_in_file 'app/models/administrator.rb',
+                        ' :registerable,',
+                        ''
+      end
+
+      copy_file 'locales/cs/cs.devise.yml', 'config/locales/cs/cs.devise.yml'
+
+      rename_file 'config/locales/devise.en.yml',
+                  'config/locales/en/en.devise.yml'
     end
 
     def setup_capistrano
@@ -174,20 +261,30 @@ module BlueberryRails
     def configure_simple_form
       if options[:bootstrap]
         generate 'simple_form:install --bootstrap'
+
+        replace_in_file 'config/initializers/simple_form.rb',
+                        '# config.label_text = lambda { |label, required, explicit_label| "#{required} #{label}" }',
+                        'config.label_text = lambda { |label, required, explicit_label| "#{required} #{label}" }'
+
       else
         generate 'simple_form:install'
       end
+      rename_file 'config/locales/simple_form.en.yml',
+                  'config/locales/en/en.simple_form.yml'
     end
 
     def replace_users_factory
-      remove_file 'spec/factories/users.rb'
-      copy_file 'users_factory.rb', 'spec/factories/users.rb'
+      copy_file 'spec/factories/users.rb',
+                'spec/factories/users.rb', force: true
+      if options[:administration]
+        copy_file 'spec/factories/administrators.rb',
+                  'spec/factories/administrators.rb', force: true
+      end
     end
 
     def replace_root_controller_spec
-      remove_file 'spec/controllers/root_controller_spec.rb'
-      copy_file 'root_controller_spec.rb',
-                'spec/controllers/root_controller_spec.rb'
+      copy_file 'spec/controllers/root_controller_spec.rb',
+                'spec/controllers/root_controller_spec.rb', force: true
     end
 
     def setup_gitignore
@@ -204,6 +301,42 @@ module BlueberryRails
 
     def init_git
       run 'git init'
+    end
+
+    def copy_rake_tasks
+      copy_file 'tasks/images.rake', 'lib/tasks/images.rake'
+      if options[:fontcustom]
+        copy_file 'tasks/icons.rake', 'lib/tasks/icons.rake'
+      end
+    end
+
+    def copy_custom_errors
+      copy_file 'controllers/errors_controller.rb', 'app/controllers/errors_controller.rb'
+
+      config = <<-RUBY
+    config.exceptions_app = self.routes
+
+      RUBY
+
+      inject_into_class 'config/application.rb', 'Application', config
+
+      remove_file 'public/404.html'
+      remove_file 'public/422.html'
+      remove_file 'public/500.html'
+    end
+
+    def copy_fontcustom_config
+      copy_file 'fontcustom.yml', 'fontcustom.yml'
+      copy_file 'assets/icons/_font_icons.scss',
+                'app/assets/icons/_font_icons.scss'
+    end
+
+    def configure_bin_setup
+
+      original = "# puts \"\\n== Copying sample files ==\"\n  # unless File.exist?(\"config/database.yml\")\n  #   system \"cp config/database.yml.sample config/database.yml\"\n  # end"
+      updated = "puts \"\\n== Copying sample files ==\"\n  unless File.exist?(\"config/database.yml\")\n    system \"cp config/database.yml.sample config/database.yml\"\n  end"
+
+      replace_in_file 'bin/setup', original, updated
     end
 
     # Gulp

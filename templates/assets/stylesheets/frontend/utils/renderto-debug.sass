@@ -1,0 +1,22 @@
+body.development:before
+  background-color: #FCF8E3
+  border-bottom: 1px solid #FBEED5
+  border-left: 1px solid #FBEED5
+  color: #C09853
+  font: small-caption
+  padding: 3px 6px
+  pointer-events: none
+  position: fixed
+  right: 0
+  top: 0
+  z-index: 1000001
+  +render-to(xs)
+    content: 'render to xs'
+  +render-to(ms)
+    content: 'render to ms'
+  +render-to(sm)
+    content: 'render to sm'
+  +render-to(md)
+    content: 'render to md'
+  +render-to(lg)
+    content: 'render to lg'

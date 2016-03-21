@@ -1,0 +1,4 @@
+cs:
+  root:
+    index:
+      hello: "Ahoj světe!"

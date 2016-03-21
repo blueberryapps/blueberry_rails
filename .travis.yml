@@ -3,4 +3,5 @@ script: 'bundle exec rake'
 rvm:
   - 2.2.3
 before_install:
+  - gem cleanup bundler
   - gem update --system
