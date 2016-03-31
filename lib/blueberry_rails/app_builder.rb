@@ -125,6 +125,14 @@ module BlueberryRails
       copy_file 'pryrc.rb', '.pryrc'
     end
 
+    def create_procfile
+      copy_file 'Procfile', 'Procfile'
+    end
+
+    def create_puma_config
+      copy_file 'puma.rb', 'config/puma.rb'
+    end
+
     def create_database
       bundle_command 'exec rake db:create'
     end
