@@ -24,6 +24,7 @@ class BlueberryRailsTest < Minitest::Test
     assert_exist_file '.rubocop.yml'
     assert_exist_file '.rspec'
     assert_file_have_content 'README.md', 'Test Project'
+    assert_file_have_content 'bin/setup', 'bundle install --deployment'
     assert run_rake
   end
 

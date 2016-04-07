@@ -332,11 +332,7 @@ module BlueberryRails
     end
 
     def configure_bin_setup
-
-      original = "# puts \"\\n== Copying sample files ==\"\n  # unless File.exist?(\"config/database.yml\")\n  #   system \"cp config/database.yml.sample config/database.yml\"\n  # end"
-      updated = "puts \"\\n== Copying sample files ==\"\n  unless File.exist?(\"config/database.yml\")\n    system \"cp config/database.yml.sample config/database.yml\"\n  end"
-
-      replace_in_file 'bin/setup', original, updated
+      copy_file 'setup', 'bin/setup', force: true
     end
 
     # Gulp
