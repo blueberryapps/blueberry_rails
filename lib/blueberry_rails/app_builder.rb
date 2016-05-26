@@ -214,8 +214,8 @@ module BlueberryRails
                             "Logger.new(Rails.root.join('log/i18n.log'))"
     end
 
-    def configure_travis
-      template 'travis.yml.erb', '.travis.yml'
+    def configure_circle
+      template 'circle.yml.erb', 'circle.yml'
     end
 
     def add_ruby_version_file
@@ -293,6 +293,13 @@ module BlueberryRails
     def replace_root_controller_spec
       copy_file 'spec/controllers/root_controller_spec.rb',
                 'spec/controllers/root_controller_spec.rb', force: true
+    end
+
+    def cache_and_compress
+      configure_environment 'production',
+        'config.static_cache_control = \'public, max-age=31536000\''
+      configure_environment 'production',
+        'config.middleware.insert_before ActionDispatch::Static, Rack::Deflater'
     end
 
     def setup_gitignore
