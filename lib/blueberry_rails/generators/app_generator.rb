@@ -155,6 +155,8 @@ module BlueberryRails
       build :disable_xml_params
       build :setup_mailer_hosts
       build :create_pryrc
+      build :create_procfile
+      build :create_puma_config
       build :add_ruby_version_file
       build :hound_config
       build :configure_i18n
