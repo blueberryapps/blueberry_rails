@@ -73,6 +73,7 @@ module BlueberryRails
       invoke :setup_custom_errors
       invoke :setup_initializers
       invoke :setup_fontcustom
+      invoke :setup_cache_and_compress
     end
 
     def customize_gemfile
@@ -103,7 +104,7 @@ module BlueberryRails
       build :configure_rspec
       build :setup_rspec_support_files
       build :test_factories_first
-      build :configure_travis
+      build :configure_circle
       build :init_guard
     end
 
@@ -165,6 +166,11 @@ module BlueberryRails
 
     def remove_routes_comment_lines
       build :remove_routes_comment_lines
+    end
+
+    def setup_cache_and_compress
+      say 'Setting up compress and cache for production env'
+      build :cache_and_compress
     end
 
     def setup_gems

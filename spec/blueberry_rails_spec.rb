@@ -22,11 +22,15 @@ class BlueberryRailsTest < Minitest::Test
     assert_exist_file 'config/initializers/simple_form.rb'
     assert_exist_file '.hound.yml'
     assert_exist_file '.rubocop.yml'
+    assert_exist_file 'circle.yml'
     assert_exist_file '.rspec'
     assert_file_have_content 'README.md', 'Test Project'
     assert_file_have_content 'bin/setup', 'bundle install --deployment'
     assert_file_have_content 'Procfile', 'bundle exec puma'
     assert_file_have_content 'config/puma.rb', 'preload_app!'
+    assert_file_have_content 'config/environments/production.rb', 'static_cache_control'
+    assert_file_have_content 'config/environments/production.rb', 'Rack::Deflater'
+
     assert run_rake
   end
 

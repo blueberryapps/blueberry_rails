@@ -1,0 +1,13 @@
+machine:
+  services:
+    - postgresql
+
+  # Version of ruby to use
+  ruby:
+    version:
+      <%= BlueberryRails::RUBY_VERSION %>
+
+
+  # Add some environment variables
+  environment:
+    CIRCLE_ENV: test
