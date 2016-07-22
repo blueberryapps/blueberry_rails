@@ -17,7 +17,7 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
-  config.fail_fast = true
+  config.fail_fast = false
   config.infer_base_class_for_anonymous_controllers = false
   config.order = 'random'
   config.use_transactional_fixtures = false

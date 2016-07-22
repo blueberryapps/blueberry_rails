@@ -5,7 +5,6 @@ module BodyClassHelper
     basic_body_class = "#{qualified_controller_name} #{qualified_controller_name}-#{controller.action_name}"
 
     basic_body_class << ' development' if Rails.env.development?
-    basic_body_class << ' show-cookie' if cookies['cookie_eu_consented'] != 'true'
 
     if content_for?(extra_body_classes_symbol)
       [basic_body_class, content_for(extra_body_classes_symbol)].join(' ')

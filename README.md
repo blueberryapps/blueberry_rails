@@ -14,6 +14,10 @@ Then you can run
 
 ### Available options
 
+Heroku review apps config
+
+    --heroku
+
 Translation Engine
 
     --translation-engine

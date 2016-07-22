@@ -3,7 +3,6 @@ require 'rails/generators/rails/app/app_generator'
 
 module BlueberryRails
   class AppGenerator < Rails::Generators::AppGenerator
-
     class_option :database, type: :string, aliases: '-d', default: 'postgresql',
       desc: "Preconfigure for selected database " \
             "(options: #{DATABASES.join('/')})"
@@ -24,10 +23,10 @@ module BlueberryRails
       desc: 'Skip Test::Unit files'
 
     class_option :skip_turbolinks, type: :boolean, default: true,
-      desc: "Skip turbolinks gem"
+      desc: 'Skip turbolinks gem'
 
-    class_option :skip_bundle, type: :boolean, aliases: "-B", default: true,
-      desc: "Don't run bundle install"
+    class_option :skip_bundle, type: :boolean, aliases: '-B', default: true,
+      desc: 'Don\'t run bundle install'
 
     class_option :gulp, type: :boolean, aliases: '-g', default: false,
       desc: 'Include Gulp asset pipeline'
@@ -46,6 +45,9 @@ module BlueberryRails
 
     class_option :custom_errors, type: :boolean, aliases: '-ce', default: false,
       desc: 'Include Errors Controller'
+
+    class_option :heroku, type: :boolean, aliases: '-he', default: true,
+      desc: 'Heroku reviews app config'
 
     def finish_template
       if options[:administration] && (!options[:devise] || !options[:bootstrap])
@@ -73,6 +75,7 @@ module BlueberryRails
       invoke :setup_custom_errors
       invoke :setup_initializers
       invoke :setup_fontcustom
+      invoke :setup_heroku
       invoke :setup_cache_and_compress
     end
 
@@ -106,11 +109,13 @@ module BlueberryRails
       build :test_factories_first
       build :configure_circle
       build :init_guard
+      build :setup_guard
     end
 
     def setup_staging_environment
       say 'Setting up the staging environment'
       build :setup_staging_environment
+      build :setup_secret_token
     end
 
     def setup_initializers
@@ -181,6 +186,8 @@ module BlueberryRails
         build :install_devise
         build :replace_users_factory
         build :replace_root_controller_spec
+      else
+        build :create_root_page
       end
       if options[:capistrano]
         say 'Setting up Capistrano'
@@ -198,6 +205,13 @@ module BlueberryRails
       if options[:gulp]
         say 'Adding Gulp asset pipeline'
         build :gulp_files
+      end
+    end
+
+    def setup_heroku
+      if options[:heroku]
+        say 'Add heroku reviews apps config'
+        build :reviews_app
       end
     end
 
