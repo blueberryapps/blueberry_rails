@@ -1,6 +1,8 @@
 # Blueberry Rails [![Build Status](https://secure.travis-ci.org/blueberryapps/blueberry_rails.png?branch=master)](http://travis-ci.org/blueberryapps/blueberry_rails)
 
-A Rails application template used at Blueberry Apps.
+A Rails application template used at Blueberry.
+
+[![blueberry](https://www.google.com/a/blueberryapps.com/images/logo.gif)](http://www.blueberry.cz)
 
 ## Installation
 
