@@ -2,7 +2,8 @@ AllCops:
   Exclude:
     - db/schema.rb
     - bin/*
-  RunRailsCops: true
+  Rails:
+    Enabled: true
 
 AbcSize:
   Enabled: false
@@ -215,7 +216,7 @@ StringLiterals:
 VariableInterpolation:
   Enabled: false
 
-TrailingComma:
+TrailingCommaInLiteral:
   Enabled: true
 
 TrivialAccessors:
