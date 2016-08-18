@@ -24,12 +24,16 @@ class BlueberryRailsTest < Minitest::Test
     assert_exist_file '.rubocop.yml'
     assert_exist_file 'circle.yml'
     assert_exist_file '.rspec'
+    assert_exist_file 'app.json'
     assert_file_have_content 'README.md', 'Test Project'
     assert_file_have_content 'bin/setup', 'bundle install --deployment'
     assert_file_have_content 'Procfile', 'bundle exec puma'
     assert_file_have_content 'config/puma.rb', 'preload_app!'
     assert_file_have_content 'config/environments/production.rb', 'static_cache_control'
     assert_file_have_content 'config/environments/production.rb', 'Rack::Deflater'
+    assert_file_have_content 'Guardfile', 'factories'
+    assert_file_have_content 'config/secrets.yml', 'staging'
+    assert_file_have_content 'config/initializers/airbrake.rb', 'config.blacklist_keys'
 
     assert run_rake
   end
@@ -108,6 +112,13 @@ class BlueberryRailsTest < Minitest::Test
     assert_exist_file 'gulp/tasks/default.coffee'
     assert_exist_file 'gulpfile.js'
     assert_exist_file 'package.json'
+    assert run_rake
+  end
+
+  def test_rake_runs_with_heroku_option
+    create_project '--heroku'
+
+    assert_exist_file 'app.json'
     assert run_rake
   end
 end

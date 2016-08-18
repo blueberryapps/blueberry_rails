@@ -2,8 +2,9 @@ AllCops:
   Exclude:
     - db/schema.rb
     - bin/*
-  Rails:
-    Enabled: true
+
+Rails:
+  Enabled: true
 
 AbcSize:
   Enabled: false

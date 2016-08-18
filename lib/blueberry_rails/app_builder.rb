@@ -1,6 +1,5 @@
 module BlueberryRails
   class AppBuilder < Rails::AppBuilder
-
     include BlueberryRails::ActionHelpers
 
     def readme
@@ -17,6 +16,13 @@ module BlueberryRails
 
     def secret_token
       template 'secret_token.rb.erb', 'config/initializers/secret_token.rb'
+    end
+
+    def setup_secret_token
+      inject_into_file 'config/secrets.yml',
+                       "\nstaging:\n" \
+                       "  secret_key_base: <%= ENV[\"SECRET_KEY_BASE\"] %>\n",
+                       after: "  secret_key_base: <%= ENV[\"SECRET_KEY_BASE\"] %>\n"
     end
 
     def disable_xml_params
@@ -37,8 +43,7 @@ module BlueberryRails
     end
 
     def use_postgres_config_template
-      template 'database.yml.erb', 'config/database.yml',
-        force: true
+      template 'database.yml.erb', 'config/database.yml', force: true
       template 'database.yml.erb', 'config/database.yml.sample'
     end
 
@@ -61,7 +66,7 @@ module BlueberryRails
                        "\n  namespace :admin do\n" \
                        "    root to: 'dashboard#show'\n" \
                        "  end\n\n",
-                       before: "  root"
+                       before: '  root'
     end
 
     def create_partials_directory
@@ -74,9 +79,7 @@ module BlueberryRails
       template 'views/layouts/application.html.slim.erb',
                'app/views/layouts/application.html.slim'
 
-      remove_file 'app/helpers/application_helper.rb'
-      copy_file 'helpers/application_helper.rb',
-                'app/helpers/application_helper.rb'
+      directory 'helpers', 'app/helpers', force: true
 
       remove_file 'public/favicon.ico'
       directory 'public/icons', 'public'
@@ -166,6 +169,12 @@ module BlueberryRails
       bundle_command 'exec guard init'
     end
 
+    def setup_guard
+      config = 'watch(%r{^spec/factories/(.+)\.rb$}) { |m| rspec.spec.call("models/factories") }'
+      inject_into_file('Guardfile',
+                       "\n\n  #{config}", before: "\nend")
+    end
+
     def raise_on_unpermitted_parameters
       configure_environment 'development',
         'config.action_controller.action_on_unpermitted_parameters = :raise'
@@ -236,11 +245,7 @@ module BlueberryRails
 
     def install_devise
       generate 'devise:install'
-      generate 'controller', 'root index'
-      remove_routes_comment_lines
-      inject_into_file 'config/routes.rb',
-                       "  root to: 'root#index'\n",
-                       after: "Rails.application.routes.draw do\n"
+      generate_root_controller_and_route
       if options[:devise_model].present?
         generate 'devise', options[:devise_model]
       end
@@ -350,6 +355,22 @@ module BlueberryRails
       copy_file 'setup', 'bin/setup', force: true
     end
 
+    def generate_root_controller_and_route
+      generate 'controller', 'root index'
+      remove_routes_comment_lines
+      inject_into_file 'config/routes.rb',
+                       "  root to: 'root#index'\n",
+                       after: "Rails.application.routes.draw do\n"
+    end
+
+    def create_root_page
+      generate_root_controller_and_route
+    end
+
+    def reviews_app
+      template 'app.json.erb', 'app.json'
+    end
+
     # Gulp
     def gulp_files
       copy_file 'gulp/gulp_helper.rb', 'app/helpers/gulp_helper.rb'
@@ -380,6 +401,5 @@ module BlueberryRails
       copy_file 'gulp/gulpfile.js',  'gulpfile.js'
       copy_file 'gulp/package.json', 'package.json'
     end
-
   end
 end

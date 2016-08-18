@@ -1,0 +1,34 @@
+{
+  "name": "<%=app_name%>",
+  "scripts": {
+  },
+  "env": {
+    "AWS_ACCESS_KEY_ID":        { "required": false },
+    "AWS_REGION":               { "required": false },
+    "AWS_SECRET_ACCESS_KEY":    { "required": false },
+    "DEPLOY_TASKS":             { "required": false },
+    "HEROKU_APP_NAME":          { "required": true },
+    "LANG":                     { "required": true },
+    "RACK_ENV":                 { "required": true },
+    "RAILS_ENV":                { "required": true },
+    "RAILS_SERVE_STATIC_FILES": { "required": true },
+    "S3_BUCKET_NAME":           { "required": false },
+    "SECRET_KEY_BASE":          { "required": true },
+    "TZ":                       { "required": false }
+  },
+  "formation": {
+    "worker": { "quantity": 1 },
+    "web":    { "quantity": 1 }
+  },
+  "addons": [
+    "heroku-postgresql"
+  ],
+  "buildpacks": [
+    {
+      "url": "urn:buildpack:heroku/ruby"
+    },
+    {
+      "url": "https://github.com/gunpowderlabs/buildpack-ruby-rake-deploy-tasks"
+    }
+  ]
+}
