@@ -155,7 +155,6 @@ module BlueberryRails
 
     def configure_app
       build :secret_token
-      build :disable_xml_params
       build :setup_mailer_hosts
       build :create_pryrc
       build :create_procfile

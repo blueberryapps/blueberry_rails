@@ -25,11 +25,6 @@ module BlueberryRails
                        after: "  secret_key_base: <%= ENV[\"SECRET_KEY_BASE\"] %>\n"
     end
 
-    def disable_xml_params
-      copy_file 'disable_xml_params.rb',
-                'config/initializers/disable_xml_params.rb'
-    end
-
     def hound_config
       copy_file '../.hound.yml', '.hound.yml'
       copy_file '../.rubocop.yml', '.rubocop.yml'
@@ -133,6 +128,7 @@ module BlueberryRails
     end
 
     def create_puma_config
+      remove_file 'config/puma.rb'
       copy_file 'puma.rb', 'config/puma.rb'
     end
 
@@ -205,13 +201,13 @@ module BlueberryRails
     end
 
     def configure_i18n
-      replace_in_file 'config/application.rb',
-                      "# config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]",
-                      "config.i18n.load_path += Dir[Rails.root.join 'config/locales/**/*.{rb,yml}']"
+      inject_into_file "config/application.rb",
+                       "\n\n    config.i18n.load_path += Dir[Rails.root.join 'config/locales/**/*.{rb,yml}']",
+                       before: "\n    # Settings"
 
-      replace_in_file 'config/application.rb',
-                      '# config.i18n.default_locale = :de',
-                      "config.i18n.available_locales = [:cs, :en]\n    config.i18n.default_locale = :cs"
+      inject_into_file 'config/application.rb',
+                       "\n\n    config.i18n.available_locales = [:cs, :en]\n    config.i18n.default_locale = :cs",
+                       before: "\n    # Settings"
 
       remove_file 'config/locales/en.yml'
       directory 'locales', 'config/locales'
@@ -235,12 +231,6 @@ module BlueberryRails
                   "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}"
                 end
       add_file '.ruby-version', "#{version}\n"
-    end
-
-    def remove_routes_comment_lines
-      replace_in_file 'config/routes.rb',
-                      /Rails.application\.routes\.draw do.*end/m,
-                      "Rails.application.routes.draw do\nend"
     end
 
     def install_devise
@@ -349,7 +339,6 @@ module BlueberryRails
 
     def generate_root_controller_and_route
       generate 'controller', 'root index'
-      remove_routes_comment_lines
       inject_into_file 'config/routes.rb',
                        "  root to: 'root#index'\n",
                        after: "Rails.application.routes.draw do\n"
