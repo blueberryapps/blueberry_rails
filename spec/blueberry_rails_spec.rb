@@ -6,8 +6,6 @@ class BlueberryRailsTest < Minitest::Test
 
   def setup
     remove_project_directory
-    cmd 'dropdb test_project_development'
-    cmd 'dropdb test_project_test'
   end
 
   def run
