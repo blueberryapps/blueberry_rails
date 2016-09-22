@@ -263,14 +263,6 @@ module BlueberryRails
                   'config/locales/en/en.devise.yml'
     end
 
-    def setup_capistrano
-      copy_file 'Capfile', 'Capfile'
-      template 'deploy.rb.erb', 'config/deploy.rb'
-      template 'deploy_production.rb.erb', 'config/deploy/production.rb'
-      template 'deploy_staging.rb.erb', 'config/deploy/staging.rb'
-      template 'capistrano_dotenv.cap', 'lib/capistrano/tasks/dotenv.cap'
-    end
-
     def configure_simple_form
       if options[:bootstrap]
         generate 'simple_form:install --bootstrap'
