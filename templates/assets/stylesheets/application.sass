@@ -1,17 +1,9 @@
-/*contains system-shared css variables*/
+// import custom bootstrap
 @import frontend/common/bootstrap-override
 
-/*contains global mixins, functions, helper selectors, etc.*/
+// import app stylesheets
 @import frontend/utils/**/*
-
-/*contains global styles, such as resets, typography, colors, etc*/
-// @import frontend/base/**/*
-
-/*contains each self-contained component in its own .scss partial*/
-// @import frontend/components/**/*
-
-/*contains styling for larger layout components; e.g. nav, header, footer, etc.*/
-// @import frontend/layout/**/*
-
-/*contains page-specific styling, if necessary*/
-// @import frontend/pages/**/*
+@import frontend/base/**/*
+@import frontend/layout/**/*
+@import frontend/components/**/*
+@import frontend/pages/**/*
