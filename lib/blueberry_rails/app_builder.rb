@@ -368,9 +368,9 @@ module BlueberryRails
         "config.assets.paths << Rails.root.join('public', 'assets', 'javascripts')\n"
       end
 
-      replace_in_file 'config/environments/development.rb',
-                      'config.assets.digest = true',
-                      'config.assets.digest = false'
+      inject_into_file 'config/environments/development.rb',
+                       "config.assets.digest = false\n",
+                       before: 'config.assets.quiet = true'
 
       copy_file 'gulp/rev_manifest.rb', 'config/initializers/rev_manifest.rb'
       copy_file 'gulp/global.coffee',   'gulp/assets/javascripts/global.coffee'
