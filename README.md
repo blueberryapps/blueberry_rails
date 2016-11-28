@@ -1,4 +1,4 @@
-# Blueberry Rails [![Build Status](https://secure.travis-ci.org/blueberryapps/blueberry_rails.png?branch=master)](http://travis-ci.org/blueberryapps/blueberry_rails)
+# Blueberry Rails [![CircleCI](https://circleci.com/gh/blueberryapps/blueberry_rails.svg?style=svg&circle-token=20a1f7352480b65bd50f523291beed7bfc082b07)](https://circleci.com/gh/blueberryapps/blueberry_rails)
 
 A Rails application template used at Blueberry.
 
