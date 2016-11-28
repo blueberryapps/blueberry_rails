@@ -13,9 +13,7 @@ module BlueberryRailsHelpers
 
   def run_rake
     Dir.chdir(project_path) do
-      cmd 'bundle exec rake db:create'
-      cmd 'bundle exec rake db:migrate'
-      cmd 'bundle exec rake db:test:prepare'
+      cmd 'bundle exec rake db:drop db:create db:migrate'
       cmd 'bundle exec rake'
     end
   end

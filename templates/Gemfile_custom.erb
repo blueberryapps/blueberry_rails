@@ -6,7 +6,7 @@ gem 'airbrake'
 <% if !options[:gulp] -%>
 gem 'autoprefixer-rails'
 <% end -%>
-gem 'coffee-rails', '~> 4.1.0'
+gem 'coffee-rails', '~> 4.2'
 <% if options[:devise] -%>
 gem 'devise'
 <% end -%>
@@ -15,15 +15,15 @@ gem 'flutie'
 gem 'jquery-rails'
 gem 'metamagic'
 gem 'pg'
+gem 'puma', '~> 3.0'
 gem 'rails', '~> <%= BlueberryRails::RAILS_VERSION %>'
 gem 'sassc-rails'
 gem 'simple_form'
 gem 'slim-rails'
 <% if options[:translation_engine] -%>
-gem 'translation_engine', github: 'blueberryapps/translation-engine'
+gem 'translation_engine', github: 'blueberryapps/translation-engine', branch: 'rails-5-support'
 <% end -%>
 gem 'uglifier', '>= 1.3.0'
-gem 'puma'
 
 source 'https://rails-assets.org' do
 <% if options[:bootstrap] -%>
@@ -36,25 +36,19 @@ group :development do
   gem 'awesome_print'
   gem 'better_errors'
   gem 'binding_of_caller'
-<% if options[:capistrano] -%>
-  gem 'capistrano', '~> 3.0.0'
-  gem 'capistrano-bundler'
-  gem 'capistrano-rails'
-  gem 'capistrano-rbenv'
-<% end -%>
 <% if options[:fontcustom] -%>
   gem 'fontcustom'
 <% end -%>
   gem 'guard-rspec'
   gem 'i18n_yaml_sorter'
   gem 'image_optimizer', '~> 1.3.0'
+  gem 'listen', '~> 3.0.5'
   gem 'mailcatcher'
   gem 'pry-rails'
-  gem 'quiet_assets'
   gem 'rails-i18n-debug', github: 'XeeD/rails-i18n-debug'
   gem 'rubocop', require: false
-  gem 'spring-commands-rspec'
   gem 'spring'
+  gem 'spring-watcher-listen', '~> 2.0.0'
 <% if options[:fontcustom] -%>
   gem 'svg_optimizer'
 <% end -%>

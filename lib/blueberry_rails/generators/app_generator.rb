@@ -31,9 +31,6 @@ module BlueberryRails
     class_option :gulp, type: :boolean, aliases: '-g', default: false,
       desc: 'Include Gulp asset pipeline'
 
-    class_option :capistrano, type: :boolean, aliases: '-c', default: false,
-      desc: 'Include Capistrano'
-
     class_option :administration, type: :boolean, aliases: '-a', default: false,
       desc: 'Include Admin part of application'
 
@@ -158,7 +155,6 @@ module BlueberryRails
 
     def configure_app
       build :secret_token
-      build :disable_xml_params
       build :setup_mailer_hosts
       build :create_pryrc
       build :create_procfile
@@ -188,10 +184,6 @@ module BlueberryRails
         build :replace_root_controller_spec
       else
         build :create_root_page
-      end
-      if options[:capistrano]
-        say 'Setting up Capistrano'
-        build :setup_capistrano
       end
     end
 

@@ -8,7 +8,7 @@ Gem::Specification.new do |gem|
   gem.version       = BlueberryRails::VERSION
   gem.authors       = ['BlueberryApps']
   gem.email         = ['jzajpt@blueberry.cz']
-  gem.description   = %q{A Rails app template by BlueberryApps }
+  gem.description   = %q{A Rails app template by BlueberryApps}
   gem.summary       = %q{A Rails app template by BlueberryApps}
   gem.homepage      = 'https://github.com/blueberryapps/blueberry_rails'
   gem.license       = 'MIT'

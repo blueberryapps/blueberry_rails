@@ -6,8 +6,6 @@ class BlueberryRailsTest < Minitest::Test
 
   def setup
     remove_project_directory
-    cmd 'dropdb test_project_development'
-    cmd 'dropdb test_project_test'
   end
 
   def run
@@ -36,17 +34,6 @@ class BlueberryRailsTest < Minitest::Test
     assert_file_have_content 'config/initializers/airbrake.rb', 'config.blacklist_keys'
 
     assert run_rake
-  end
-
-  def test_rake_runs_with_capistrano_option
-    create_project '--capistrano'
-
-    assert_file_have_content 'Gemfile', 'capistrano'
-
-    assert_exist_file 'Capfile'
-    assert_exist_file 'config/deploy.rb'
-    assert_exist_file 'config/deploy/production.rb'
-    assert_exist_file 'config/deploy/staging.rb'
   end
 
   def test_rake_runs_with_no_devise_option
