@@ -146,11 +146,7 @@ module BlueberryRails
     end
 
     def create_assets
-      if options[:bootstrap]
-        build :copy_assets_directory
-      else
-        build :copy_print_style
-      end
+      build :copy_assets_directory if options[:bootstrap]
     end
 
     def configure_app

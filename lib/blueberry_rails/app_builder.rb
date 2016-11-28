@@ -90,7 +90,7 @@ module BlueberryRails
 
       replace_in_file 'config/initializers/assets.rb',
         '# Rails.application.config.assets.precompile += %w( search.js )',
-        'Rails.application.config.assets.precompile += %w( print.css ie.css )'
+        'Rails.application.config.assets.precompile += %w( ie.css )'
 
       if options[:administration]
         directory 'admin_assets', 'app/assets'
@@ -99,11 +99,6 @@ module BlueberryRails
                         '.precompile += %w( ',
                         '.precompile += %w( admin.css admin.js '
       end
-    end
-
-    def copy_print_style
-      copy_file 'assets/stylesheets/print.sass',
-                'app/assets/stylesheets/print.sass'
     end
 
     def copy_initializers

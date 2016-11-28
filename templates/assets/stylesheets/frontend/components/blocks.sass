@@ -1,0 +1,19 @@
+//
+// Body
+// -------------------------------
+
+.block
+  position: relative
+  padding: 1px 0
+  z-index: 10
+
+.block-content
+    @extend .container
+    margin-top: rem(50)
+    margin-bottom: rem(50)
+    position: relative
+    z-index: 10
+
+    &:before,
+    &:after
+      display: none
