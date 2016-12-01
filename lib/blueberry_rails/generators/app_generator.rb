@@ -7,9 +7,6 @@ module BlueberryRails
       desc: "Preconfigure for selected database " \
             "(options: #{DATABASES.join('/')})"
 
-    # class_option :github, :type => :string, :aliases => '-G', :default => nil,
-    #  :desc => 'Create Github repository and add remote origin pointed to repo'
-
     class_option :bootstrap, type: :boolean, aliases: '-b', default: false,
       desc: 'Include bootstrap 3'
 
@@ -43,8 +40,14 @@ module BlueberryRails
     class_option :custom_errors, type: :boolean, aliases: '-ce', default: false,
       desc: 'Include Errors Controller'
 
-    class_option :heroku, type: :boolean, aliases: '-he', default: true,
-      desc: 'Heroku reviews app config'
+    class_option :heroku, type: :boolean, aliases: '-H', default: false,
+      desc: 'Create staging and production Heroku apps'
+
+    class_option :heroku_flags, type: :string, default: '--region eu --addons sendgrid',
+      desc: 'Set extra Heroku flags'
+
+    class_option :github, type: :string, default: nil,
+      desc: "Create Github repository and add remote origin pointed to repo"
 
     def finish_template
       if options[:administration] && (!options[:devise] || !options[:bootstrap])
@@ -72,8 +75,9 @@ module BlueberryRails
       invoke :setup_custom_errors
       invoke :setup_initializers
       invoke :setup_fontcustom
-      invoke :setup_heroku
       invoke :setup_cache_and_compress
+      invoke :create_heroku_apps
+      invoke :create_github_repo
     end
 
     def customize_gemfile
@@ -149,6 +153,13 @@ module BlueberryRails
       build :copy_assets_directory if options[:bootstrap]
     end
 
+    def create_github_repo
+      if !options[:skip_git] && options[:github]
+        say 'Creating Github repo'
+        build :create_github_repo, options[:github]
+      end
+    end
+
     def configure_app
       build :secret_token
       build :setup_mailer_hosts
@@ -196,18 +207,19 @@ module BlueberryRails
       end
     end
 
-    def setup_heroku
-      if options[:heroku]
-        say 'Add heroku reviews apps config'
-        build :reviews_app
-      end
-    end
-
     def rake_tasks
       build :copy_rake_tasks
     end
 
-    def run_bundle
+    def create_heroku_apps
+      if options[:heroku]
+        say 'Creating Heroku apps'
+        build :create_heroku_apps, options[:heroku_flags]
+        build :set_heroku_rails_secrets
+        build :set_heroku_application_host
+        build :create_heroku_pipeline
+        build :create_review_apps_setup_script
+      end
     end
 
     protected

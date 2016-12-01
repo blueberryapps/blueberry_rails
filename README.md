@@ -16,9 +16,13 @@ Then you can run
 
 ### Available options
 
-Heroku review apps config
+Create production + staging app on Heroku and add to pipeline
 
     --heroku
+
+Create repo on Github
+
+  --github organization/project
 
 Translation Engine
 

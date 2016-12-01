@@ -1,5 +1,5 @@
 module BlueberryRails
-  module ActionHelpers
+  module Actions
     def action_mailer_host(rails_env, host)
       host = "config.action_mailer.default_url_options = { host: '#{host}' }"
       configure_environment(rails_env, host)
