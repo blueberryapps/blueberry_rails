@@ -112,6 +112,9 @@ module BlueberryRails
       end
       copy_file 'config/initializers/airbrake.rb',
                 'config/initializers/airbrake.rb'
+
+      copy_file 'config/initializers/plurals.rb',
+                'config/initializers/plurals.rb'
     end
 
     def create_pryrc
