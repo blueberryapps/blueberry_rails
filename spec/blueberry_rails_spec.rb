@@ -18,6 +18,7 @@ class BlueberryRailsTest < Minitest::Test
     create_project
 
     assert_exist_file 'config/initializers/simple_form.rb'
+    assert_exist_file 'config/initializers/plurals.rb'
     assert_exist_file '.hound.yml'
     assert_exist_file '.rubocop.yml'
     assert_exist_file 'circle.yml'
