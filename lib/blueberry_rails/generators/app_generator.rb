@@ -19,8 +19,8 @@ module BlueberryRails
     class_option :devise_model, type: :string, aliases: '-M', default: 'User',
       desc: 'Name of devise model to generate'
 
-    class_option :skip_test_unit, type: :boolean, aliases: '-T', default: true,
-      desc: 'Skip Test::Unit files'
+    class_option :skip_test, type: :boolean, aliases: '-T', default: true,
+      desc: 'Skip Test files'
 
     class_option :skip_turbolinks, type: :boolean, default: true,
       desc: 'Skip turbolinks gem'
