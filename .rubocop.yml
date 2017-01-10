@@ -114,6 +114,9 @@ FormatString:
   Enabled: true
   EnforcedStyle: percent
 
+FrozenStringLiteralComment:
+  Enabled: false
+
 GlobalVars:
   Enabled: true
 
