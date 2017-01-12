@@ -1,12 +1,9 @@
-.row
-  .col-md-12
-    .jumbotron
-      .row
-        .col-md-9
-          h2 Resources
-        col-md-3
-          = link_to 'Nový resource', '#', class: 'btn-lg btn-success pull-right'
+.content-header
+  h1
+    span.glyphicon.glyphicon-user
+    span.text =< t '.title'
 
-.row
-  .col-md-12
-    .panel.panel-default
+  ol.breadcrumb
+    li = link_to 'Home', [:admin, :root]
+    li.active
+      strong =< t '.title'
