@@ -28,7 +28,7 @@ class BlueberryRailsTest < Minitest::Test
     assert_file_have_content 'bin/setup', 'bundle install --deployment'
     assert_file_have_content 'Procfile', 'bundle exec puma'
     assert_file_have_content 'config/puma.rb', 'preload_app!'
-    assert_file_have_content 'config/environments/production.rb', 'static_cache_control'
+    assert_file_have_content 'config/environments/production.rb', 'Cache-Control'
     assert_file_have_content 'config/environments/production.rb', 'Rack::Deflater'
     assert_file_have_content 'Guardfile', 'factories'
     assert_file_have_content 'config/secrets.yml', 'staging'

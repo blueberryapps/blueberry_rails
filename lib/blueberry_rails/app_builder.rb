@@ -282,7 +282,7 @@ module BlueberryRails
 
     def cache_and_compress
       configure_environment 'production',
-        'config.static_cache_control = \'public, max-age=31536000\''
+        "config.public_file_server.headers = {\n    'Cache-Control' => 'public, max-age=31536000'\n  }"
       configure_environment 'production',
         'config.middleware.insert_before ActionDispatch::Static, Rack::Deflater'
     end
