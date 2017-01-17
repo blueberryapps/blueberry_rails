@@ -6,6 +6,9 @@ gem 'airbrake'
 <% if !options[:gulp] -%>
 gem 'autoprefixer-rails'
 <% end -%>
+<% if options[:administration] -%>
+gem 'blueberry_admin'
+<% end -%>
 gem 'coffee-rails', '~> 4.2'
 <% if options[:devise] -%>
 gem 'devise'

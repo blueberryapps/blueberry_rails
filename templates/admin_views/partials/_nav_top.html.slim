@@ -1,0 +1,10 @@
+nav.navbar.navbar-static-top role="navigation"
+  .navbar-custom-menu
+    ul.nav.navbar-nav
+      li
+        = link_to '#'
+          i.glyphicon.glyphicon-user>
+          span.role = current_administrator.email.split('@').first
+      li
+        = link_to destroy_administrator_session_path, method: :delete, title: t('.logout')
+          i.glyphicon.glyphicon-log-out

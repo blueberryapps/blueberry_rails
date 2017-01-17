@@ -1,7 +1,7 @@
 module BlueberryRails
   VERSION = '0.4.0'
 
-  RUBY_VERSION = '2.3.3'
+  RUBY_VERSION = '2.4.0'
 
-  RAILS_VERSION = '5.0.0.1'
+  RAILS_VERSION = '5.0.1'
 end

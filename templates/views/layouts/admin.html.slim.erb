@@ -11,11 +11,15 @@ html
     = csrf_meta_tags
 
   body class=body_class
-    = render 'admin/partials/menu'
+    .wrapper
+      .sidebar
+        = render 'admin/partials/nav_left'
 
-    .container
-      .row = render 'application/flashes'
-      = yield
+      .content-wrapper
+        .header
+          = render 'admin/partials/nav_top'
+        = render 'application/flashes'
+        = yield
 
     = javascript_include_tag :admin
     = yield :javascript
