@@ -374,7 +374,7 @@ module BlueberryRails
       directory 'gulp/tasks'
       directory 'gulp/util'
       copy_file 'gulp/gulpfile.js',  'gulpfile.js'
-      copy_file 'gulp/package.json', 'package.json'
+      copy_file 'gulp/package.json', 'package.json', force: true
     end
   end
 end
