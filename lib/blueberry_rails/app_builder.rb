@@ -88,10 +88,6 @@ module BlueberryRails
 
       remove_file 'app/assets/icons'
 
-      replace_in_file 'config/initializers/assets.rb',
-        '# Rails.application.config.assets.precompile += %w( search.js )',
-        'Rails.application.config.assets.precompile += %w( ie.css )'
-
       if options[:administration]
         directory 'admin_assets', 'app/assets'
 
@@ -378,7 +374,7 @@ module BlueberryRails
       directory 'gulp/tasks'
       directory 'gulp/util'
       copy_file 'gulp/gulpfile.js',  'gulpfile.js'
-      copy_file 'gulp/package.json', 'package.json'
+      copy_file 'gulp/package.json', 'package.json', force: true
     end
   end
 end
