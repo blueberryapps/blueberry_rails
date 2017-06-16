@@ -21,6 +21,8 @@ module BlueberryRails
     def setup_secret_token
       inject_into_file 'config/secrets.yml',
                        "\nstaging:\n" \
+                       "  secret_key_base: <%= ENV[\"SECRET_KEY_BASE\"] %>\n" \
+                       "\nintegration:\n" \
                        "  secret_key_base: <%= ENV[\"SECRET_KEY_BASE\"] %>\n",
                        after: "  secret_key_base: <%= ENV[\"SECRET_KEY_BASE\"] %>\n"
     end
@@ -34,6 +36,7 @@ module BlueberryRails
       action_mailer_host 'development', "development.#{app_name}.com"
       action_mailer_host 'test', "test.#{app_name}.com"
       action_mailer_host 'staging', "staging.#{app_name}.com"
+      action_mailer_host 'integration', "integration.#{app_name}.com"
       action_mailer_host 'production', "#{app_name}.com"
     end
 
@@ -48,6 +51,11 @@ module BlueberryRails
       replace_in_file 'config/environments/staging.rb',
                       'config.consider_all_requests_local       = false',
                       'config.consider_all_requests_local       = true'
+    end
+
+    def setup_integration_environment
+      copy_file 'config/environments/production.rb',
+                'config/environments/integration.rb'
     end
 
     def setup_admin
