@@ -32,6 +32,7 @@ class BlueberryRailsTest < Minitest::Test
     assert_file_have_content 'config/environments/production.rb', 'Rack::Deflater'
     assert_file_have_content 'Guardfile', 'factories'
     assert_file_have_content 'config/secrets.yml', 'staging'
+    assert_file_have_content 'config/secrets.yml', 'integration'
     assert_file_have_content 'config/initializers/airbrake.rb', 'config.blacklist_keys'
 
     assert run_rake

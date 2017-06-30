@@ -60,6 +60,7 @@ module BlueberryRails
       invoke :setup_development_environment
       invoke :setup_test_environment
       invoke :setup_staging_environment
+      invoke :setup_integration_environment
       invoke :create_views
       invoke :create_assets
       invoke :configure_app
@@ -112,6 +113,11 @@ module BlueberryRails
     def setup_staging_environment
       say 'Setting up the staging environment'
       build :setup_staging_environment
+    end
+
+    def setup_integration_environment
+      say 'Setting up the integration environment'
+      build :setup_integration_environment
       build :setup_secret_token
     end
 

@@ -1,4 +1,4 @@
-if %w(production staging).include? Rails.env
+if %w(production integration staging).include? Rails.env
   TranslationEngine.config do |config|
     # key for user
     config.api_key  = 'API_KEY'
