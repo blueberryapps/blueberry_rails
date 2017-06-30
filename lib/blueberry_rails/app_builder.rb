@@ -1,6 +1,18 @@
+require "forwardable"
+
 module BlueberryRails
   class AppBuilder < Rails::AppBuilder
-    include BlueberryRails::ActionHelpers
+    include BlueberryRails::Actions
+    extend Forwardable
+
+    def_delegators :heroku_adapter,
+                   :create_heroku_application_manifest_file,
+                   :create_heroku_pipeline,
+                   :create_production_heroku_app,
+                   :create_staging_heroku_app,
+                   :create_review_apps_setup_script,
+                   :set_heroku_rails_secrets,
+                   :set_heroku_application_host
 
     def readme
       template 'README.md.erb', 'README.md'
@@ -350,8 +362,13 @@ module BlueberryRails
       generate_root_controller_and_route
     end
 
-    def reviews_app
-      template 'app.json.erb', 'app.json'
+    def create_heroku_apps(flags)
+      create_staging_heroku_app(flags)
+      create_production_heroku_app(flags)
+    end
+
+    def create_github_repo(repo_name)
+      run "hub create #{repo_name}"
     end
 
     # Gulp
@@ -383,6 +400,12 @@ module BlueberryRails
       directory 'gulp/util'
       copy_file 'gulp/gulpfile.js',  'gulpfile.js'
       copy_file 'gulp/package.json', 'package.json', force: true
+    end
+
+    private
+
+    def heroku_adapter
+      @heroku_adapter ||= Adapters::Heroku.new(self)
     end
   end
 end
