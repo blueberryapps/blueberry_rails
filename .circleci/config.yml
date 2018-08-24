@@ -1,0 +1,13 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/ruby:2.4-jessie-node
+        environment:
+          BUNDLE_PATH: vendor/bundle
+          RAILS_ENV: test
+
+    steps:
+      - checkout
+      - run: bundle install
+      - run: bundle exec rake test

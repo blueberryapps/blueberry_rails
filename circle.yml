@@ -1,5 +1,0 @@
-test:
-  override:
-    - bundle exec rake:
-        parallel: true
-        timeout: 1400
