@@ -85,11 +85,12 @@ module BlueberryRails
       remove_file 'app/assets/stylesheets', force: true
       remove_file 'app/assets/javascripts', force: true
 
-      run 'mkdir app/javascript/stylesheets'
-      run 'touch app/javascript/stylesheets/.keep'
+      run 'mkdir app/javascript/stylesheets', force: true
+      run 'touch app/javascript/packs/application.sass', force: true
 
       if options[:administration]
-        run 'cp app/javascript/packs/application.js app/javascript/packs/admin.js'
+        run 'touch app/javascript/packs/admin.js', force: true
+        run 'touch app/javascript/packs/admin.sass', force: true
       end
     end
 
