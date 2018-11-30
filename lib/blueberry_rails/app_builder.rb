@@ -14,10 +14,6 @@ module BlueberryRails
       template 'Gemfile_custom.erb', 'Gemfile'
     end
 
-    def secret_token
-      template 'secret_token.rb.erb', 'config/initializers/secret_token.rb'
-    end
-
     def setup_secret_token
       inject_into_file 'config/secrets.yml',
                        "\nstaging:\n" \
@@ -29,6 +25,7 @@ module BlueberryRails
 
     def hound_config
       copy_file '../.hound.yml', '.hound.yml'
+      copy_file '../.jshintrc', '.jshintrc'
       copy_file '../.rubocop.yml', '.rubocop.yml'
     end
 
@@ -89,19 +86,14 @@ module BlueberryRails
     end
 
     def copy_assets_directory
-      remove_file 'app/assets/stylesheets/application.css'
-      remove_file 'app/assets/javascripts/application.js'
+      remove_file 'app/assets/stylesheets'
+      remove_file 'app/assets/javascripts'
 
-      directory 'assets', 'app/assets'
-
-      remove_file 'app/assets/icons'
+      run 'mkdir app/javascript/stylesheets'
+      run 'touch app/javascript/stylesheets/.keep'
 
       if options[:administration]
-        directory 'admin_assets', 'app/assets'
-
-        replace_in_file 'config/initializers/assets.rb',
-                        '.precompile += %w( ',
-                        '.precompile += %w( admin.css admin.js '
+        run 'cp app/javascript/packs/application.js app/javascript/packs/admin.js'
       end
     end
 
@@ -135,7 +127,7 @@ module BlueberryRails
     end
 
     def create_database
-      bundle_command 'exec rake db:create'
+      bundle_command 'exec rails db:create'
     end
 
     def generate_rspec
@@ -145,7 +137,21 @@ module BlueberryRails
                        "\n# Screenshots\n" \
                        "require 'capybara-screenshot/rspec'\n" \
                        "Capybara::Screenshot.autosave_on_failure =\n" \
-                       "  (ENV['SCR'] || ENV['AUTO_SCREENSHOT']) == '1'\n",
+                       "  (ENV['SCR'] || ENV['AUTO_SCREENSHOT']) == '1'\n" \
+                       "\n# Webdriver\n" \
+                       "require 'selenium/webdriver\n'" \
+                       "\nCapybara.register_driver :chrome do |app|\n" \
+                       "  Capybara::Selenium::Driver.new(app, browser: :chrome)\n" \
+                       "end\n" \
+                       "\nCapybara.register_driver :headless_chrome do |app|\n" \
+                       "  Capybara::Selenium::Driver.new app,\n" \
+                       "    browser:              :chrome,\n" \
+                       "    desired_capabilities: Selenium::WebDriver::Remote::Capabilities.chrome(\n" \
+                       "      chromeOptions: { args: %w(headless disable-gpu window-size=1366,768) }\n" \
+                       "    )\n" \
+                       "end\n" \
+                       "\nCapybara.javascript_driver = :headless_chrome\n" \
+                       "# Capybara.javascript_driver = :chrome\n",
                        after: "Rails is not loaded until this point!\n"
     end
 
@@ -158,7 +164,7 @@ module BlueberryRails
     end
 
     def setup_rspec_support_files
-      copy_file 'spec/factory_girl_syntax.rb', 'spec/support/factory_girl.rb'
+      copy_file 'spec/factory_bot_syntax.rb', 'spec/support/factory_bot.rb'
       copy_file 'spec/database_cleaner_setup.rb', 'spec/support/database_cleaner.rb'
       copy_file 'spec/mail_body_helpers.rb', 'spec/support/mixins/mail_body_helpers.rb'
     end
@@ -222,7 +228,8 @@ module BlueberryRails
     end
 
     def configure_circle
-      template 'circle.yml.erb', 'circle.yml'
+      empty_directory '.circleci'
+      template 'circle.yml.erb', '/.circleci/config.yml'
     end
 
     def add_ruby_version_file
@@ -292,12 +299,14 @@ module BlueberryRails
     end
 
     def setup_gitignore
-      [ 'spec/lib',
+      [
+        'spec/lib',
         'spec/controllers',
         'spec/features',
         'spec/support/matchers',
         'spec/support/mixins',
-        'spec/support/shared_examples' ].each do |dir|
+        'spec/support/shared_examples'
+      ].each do |dir|
         run "mkdir -p #{dir}"
         run "touch #{dir}/.keep"
       end
@@ -309,9 +318,6 @@ module BlueberryRails
 
     def copy_rake_tasks
       copy_file 'tasks/images.rake', 'lib/tasks/images.rake'
-      if options[:fontcustom]
-        copy_file 'tasks/icons.rake', 'lib/tasks/icons.rake'
-      end
     end
 
     def copy_custom_errors
@@ -327,12 +333,6 @@ module BlueberryRails
       remove_file 'public/404.html'
       remove_file 'public/422.html'
       remove_file 'public/500.html'
-    end
-
-    def copy_fontcustom_config
-      copy_file 'fontcustom.yml', 'fontcustom.yml'
-      copy_file 'assets/icons/_font_icons.scss',
-                'app/assets/icons/_font_icons.scss'
     end
 
     def configure_bin_setup

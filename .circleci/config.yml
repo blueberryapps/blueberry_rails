@@ -3,18 +3,12 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/ruby:<%= BlueberryRails::RUBY_VERSION %>-node-browsers
+      - image: circleci/ruby:2.5.1-node-browsers
         environment:
           BUNDLE_JOBS: 3
           BUNDLE_RETRY: 3
           BUNDLE_PATH: vendor/bundle
           RAILS_ENV: test
-          DATABASE_URL: "postgres://<%= app_name.gsub('_', '-') %>@localhost:5432/<%= app_name.gsub('_', '-') %>-test"
-      - image: circleci/postgres:9.5-alpine
-        environment:
-          POSTGRES_USER: <%= app_name.gsub('_', '-') %>
-          POSTGRES_DB: <%= app_name.gsub('_', '-') %>-test
-          POSTGRES_PASSWORD: ""
 
     working_directory: ~/repo
 
@@ -41,14 +35,6 @@ jobs:
           paths:
             - ./vendor/bundle
           key: v1-dependencies-{{ checksum "Gemfile.lock" }}
-
-      - run:
-          name: Install yarn dependencies
-          command: yarn install
-
-      # Database setup
-      - run: bundle exec rails db:create
-      - run: bundle exec rails db:schema:load
 
       # run tests!
       - run:

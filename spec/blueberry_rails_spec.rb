@@ -83,16 +83,6 @@ class BlueberryRailsTest < Minitest::Test
     assert run_rake
   end
 
-  def test_rake_runs_with_fontcustom_option
-    create_project '--fontcustom'
-
-    assert_exist_file 'lib/tasks/icons.rake'
-    assert_exist_file 'fontcustom.yml'
-    assert_exist_file "app/assets/icons/_font_icons.scss"
-
-    assert run_rake
-  end
-
   def test_rake_runs_with_gulp_option
     create_project '--gulp'
 

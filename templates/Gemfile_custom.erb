@@ -3,47 +3,37 @@ source 'https://rubygems.org'
 ruby '<%= BlueberryRails::RUBY_VERSION %>'
 
 gem 'airbrake'
-<% if !options[:gulp] -%>
+<% unless options[:gulp] -%>
 gem 'autoprefixer-rails'
 <% end -%>
 <% if options[:administration] -%>
 gem 'blueberry_admin'
 <% end -%>
-gem 'coffee-rails', '~> 4.2'
+gem 'bootsnap', require: false
 <% if options[:devise] -%>
-gem 'devise'
+gem 'devise', '~> 4.5'
 <% end -%>
 gem 'dotenv-rails'
+gem 'draper', '~> 3.0'
 gem 'flutie'
-gem 'jquery-rails'
 gem 'metamagic'
-gem 'pg'
-gem 'puma', '~> 3.0'
+gem 'pg', '>= 0.18', '< 2.0'
+gem 'puma', '~> 3.11'
 gem 'rails', '~> <%= BlueberryRails::RAILS_VERSION %>'
-gem 'sassc-rails'
-gem 'simple_form'
-gem 'slim-rails'
+gem 'sass-rails', '~> 5.0'
+gem 'simple_form', '~> 4.1'
+gem 'slim-rails', '~> 3.2'
 <% if options[:translation_engine] -%>
 gem 'translation_engine', github: 'blueberryapps/translation-engine'
 <% end -%>
-gem 'uglifier', '>= 1.3.0'
-
-source 'https://rails-assets.org' do
-<% if options[:bootstrap] -%>
-  gem 'rails-assets-bootstrap-sass'
+<% unless options[:skip_turbolinks] -%>
+gem 'turbolinks', '~> 5'
 <% end -%>
-  gem 'rails-assets-jquery-ujs'
-end
+gem 'uglifier', '>= 1.3.0'
 
 group :development do
   gem 'awesome_print'
-  gem 'better_errors'
-  gem 'binding_of_caller'
-<% if options[:fontcustom] -%>
-  gem 'fontcustom'
-<% end -%>
   gem 'guard-rspec'
-  gem 'i18n_yaml_sorter'
   gem 'image_optimizer', '~> 1.3.0'
   gem 'listen', '~> 3.0.5'
   gem 'mailcatcher'
@@ -52,9 +42,7 @@ group :development do
   gem 'rubocop', require: false
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
-<% if options[:fontcustom] -%>
-  gem 'svg_optimizer'
-<% end -%>
+  gem 'web-console', '>= 3.3.0'
 end
 
 group :development, :test do

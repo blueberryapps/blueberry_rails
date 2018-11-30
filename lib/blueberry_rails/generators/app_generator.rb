@@ -25,7 +25,7 @@ module BlueberryRails
     class_option :skip_turbolinks, type: :boolean, default: true,
       desc: 'Skip turbolinks gem'
 
-    class_option :skip_bundle, type: :boolean, aliases: '-B', default: true,
+    class_option :skip_bundle, type: :boolean, aliases: '-B', default: false,
       desc: 'Don\'t run bundle install'
 
     class_option :gulp, type: :boolean, aliases: '-g', default: false,
@@ -33,9 +33,6 @@ module BlueberryRails
 
     class_option :administration, type: :boolean, aliases: '-a', default: false,
       desc: 'Include Admin part of application'
-
-    class_option :fontcustom, type: :boolean, aliases: '-fc', default: false,
-      desc: 'Include Fontcustom'
 
     class_option :translation_engine, type: :boolean, aliases: '-te', default: false,
       desc: 'Include Tranlsation Engine'
@@ -72,7 +69,6 @@ module BlueberryRails
       invoke :rake_tasks
       invoke :setup_custom_errors
       invoke :setup_initializers
-      invoke :setup_fontcustom
       invoke :setup_heroku
       invoke :setup_cache_and_compress
     end
@@ -124,13 +120,6 @@ module BlueberryRails
     def setup_initializers
       say 'Setting up initializers'
       build :copy_initializers
-    end
-
-    def setup_fontcustom
-      if options[:fontcustom]
-        say 'Setting up fontcustom'
-        build :copy_fontcustom_config
-      end
     end
 
     def setup_admin

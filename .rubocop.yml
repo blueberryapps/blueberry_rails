@@ -2,7 +2,7 @@ AllCops:
   Exclude:
     - db/schema.rb
     - bin/*
-
+  TargetRubyVersion: 2.5
 Rails:
   Enabled: true
 
@@ -10,7 +10,7 @@ AbcSize:
   Enabled: false
 
 AccessorMethodName:
-  Enabled: true
+  Enabled: false
 
 ActionFilter:
   Enabled: true
@@ -72,14 +72,14 @@ CyclomaticComplexity:
 Delegate:
   Enabled: false
 
-DeprecatedHashMethods:
+PreferedHashMethods:
   Enabled: true
 
 Documentation:
   Enabled: false
 
 DotPosition:
-  EnforcedStyle: trailing
+  EnforcedStyle: leading
 
 DoubleNegation:
   Enabled: false
@@ -114,9 +114,6 @@ FormatString:
   Enabled: true
   EnforcedStyle: percent
 
-FrozenStringLiteralComment:
-  Enabled: false
-
 GlobalVars:
   Enabled: true
 
@@ -133,10 +130,10 @@ InlineComment:
   Enabled: false
 
 Lambda:
-  Enabled: true
+  Enabled: false
 
 LambdaCall:
-  Enabled: true
+  Enabled: false
 
 LineEndConcatenation:
   Enabled: true
@@ -174,7 +171,7 @@ NumericLiterals:
 OneLineConditional:
   Enabled: true
 
-OpMethod:
+BinaryOperatorParameter:
   Enabled: true
 
 ParameterLists:
@@ -214,13 +211,22 @@ SignalException:
 SpecialGlobalVars:
   Enabled: true
 
+SpaceInLambdaLiteral:
+  Enabled: false
+
 StringLiterals:
   EnforcedStyle: single_quotes
+
+Style/MutableConstant:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
 
 VariableInterpolation:
   Enabled: false
 
-TrailingCommaInLiteral:
+TrailingCommaInArrayLiteral:
   Enabled: true
 
 TrivialAccessors:
@@ -233,7 +239,7 @@ WhileUntilModifier:
   Enabled: false
 
 WordArray:
-  Enabled: true
+  Enabled: false
 
 # Lint
 
@@ -258,7 +264,7 @@ ElseLayout:
 HandleExceptions:
   Enabled: false
 
-InvalidCharacterLiteral:
+MultilineMethodCallIndentation:
   Enabled: false
 
 LiteralInCondition:
@@ -280,4 +286,7 @@ UnderscorePrefixedVariableName:
   Enabled: false
 
 Void:
+  Enabled: false
+
+SymbolArray:
   Enabled: false
