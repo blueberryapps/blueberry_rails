@@ -43,6 +43,9 @@ module BlueberryRails
     class_option :heroku, type: :boolean, aliases: '-he', default: true,
       desc: 'Heroku reviews app config'
 
+    class_option :webpack, type: :string, aliases: '-w', default: 'stimulus',
+      desc: 'Preconfigure for app-like JavaScript with Webpack (options: react/vue/angular/elm/stimulus)'
+
     def finish_template
       if options[:administration] && (!options[:devise] || !options[:bootstrap])
         raise 'Administration depends on bootstrap and devise!'
@@ -114,7 +117,6 @@ module BlueberryRails
     def setup_integration_environment
       say 'Setting up the integration environment'
       build :setup_integration_environment
-      build :setup_secret_token
     end
 
     def setup_initializers

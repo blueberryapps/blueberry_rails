@@ -14,15 +14,6 @@ module BlueberryRails
       template 'Gemfile_custom.erb', 'Gemfile'
     end
 
-    def setup_secret_token
-      inject_into_file 'config/secrets.yml',
-                       "\nstaging:\n" \
-                       "  secret_key_base: <%= ENV[\"SECRET_KEY_BASE\"] %>\n" \
-                       "\nintegration:\n" \
-                       "  secret_key_base: <%= ENV[\"SECRET_KEY_BASE\"] %>\n",
-                       after: "  secret_key_base: <%= ENV[\"SECRET_KEY_BASE\"] %>\n"
-    end
-
     def hound_config
       copy_file '../.hound.yml', '.hound.yml'
       copy_file '../.jshintrc', '.jshintrc'
@@ -70,14 +61,19 @@ module BlueberryRails
     end
 
     def create_partials_directory
-      directory 'views/application', 'app/views/application'
+      directory 'views/application', 'app/views/application', force: true
     end
 
     def create_application_layout
       remove_file 'app/views/layouts/application.html.erb'
+      remove_file 'app/views/layouts/mailer.html.erb'
+      remove_file 'app/views/layouts/mailer.text.erb'
 
       template 'views/layouts/application.html.slim.erb',
-               'app/views/layouts/application.html.slim'
+               'app/views/layouts/application.html.slim', force: true
+
+      template 'views/layouts/mailer.html.slim.erb',
+               'app/views/layouts/mailer.html.slim', force: true
 
       directory 'helpers', 'app/helpers', force: true
 
@@ -86,8 +82,8 @@ module BlueberryRails
     end
 
     def copy_assets_directory
-      remove_file 'app/assets/stylesheets'
-      remove_file 'app/assets/javascripts'
+      remove_file 'app/assets/stylesheets', force: true
+      remove_file 'app/assets/javascripts', force: true
 
       run 'mkdir app/javascript/stylesheets'
       run 'touch app/javascript/stylesheets/.keep'
@@ -139,7 +135,7 @@ module BlueberryRails
                        "Capybara::Screenshot.autosave_on_failure =\n" \
                        "  (ENV['SCR'] || ENV['AUTO_SCREENSHOT']) == '1'\n" \
                        "\n# Webdriver\n" \
-                       "require 'selenium/webdriver\n'" \
+                       "require 'selenium/webdriver'\n" \
                        "\nCapybara.register_driver :chrome do |app|\n" \
                        "  Capybara::Selenium::Driver.new(app, browser: :chrome)\n" \
                        "end\n" \
@@ -229,7 +225,7 @@ module BlueberryRails
 
     def configure_circle
       empty_directory '.circleci'
-      template 'circle.yml.erb', '/.circleci/config.yml'
+      template 'circle.yml.erb', '.circleci/config.yml'
     end
 
     def add_ruby_version_file
