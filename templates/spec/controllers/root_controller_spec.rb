@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe RootController, type: :controller do
+RSpec.describe RootController, type: :controller do
   describe 'GET index' do
     it 'returns http success' do
       get :index

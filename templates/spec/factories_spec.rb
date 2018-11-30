@@ -1,7 +1,7 @@
-require 'spec_helper'
+require 'rails_helper'
 
 FactoryBot.factories.map(&:name).each do |factory_name|
-  describe "factory #{factory_name}" do
+  RSpec.describe "factory #{factory_name}" do
     it 'is valid' do
       factory = build(factory_name)
 

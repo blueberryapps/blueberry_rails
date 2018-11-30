@@ -206,11 +206,11 @@ module BlueberryRails
 
     def configure_i18n
       inject_into_file "config/application.rb",
-                       "\n\n    config.i18n.load_path += Dir[Rails.root.join 'config/locales/**/*.{rb,yml}']",
+                       "\n    config.i18n.load_path += Dir[Rails.root.join 'config/locales/**/*.{rb,yml}']",
                        before: "\n    # Settings"
 
       inject_into_file 'config/application.rb',
-                       "\n\n    config.i18n.available_locales = [:cs, :en]\n    config.i18n.default_locale = :cs",
+                       "\n    config.i18n.available_locales = [:cs, :en]\n    config.i18n.default_locale = :cs",
                        before: "\n    # Settings"
 
       remove_file 'config/locales/en.yml'
@@ -326,9 +326,9 @@ module BlueberryRails
 
       inject_into_class 'config/application.rb', 'Application', config
 
-      remove_file 'public/404.html'
-      remove_file 'public/422.html'
-      remove_file 'public/500.html'
+      remove_file 'public/404.html', force: true
+      remove_file 'public/422.html', force: true
+      remove_file 'public/500.html', force: true
     end
 
     def configure_bin_setup
