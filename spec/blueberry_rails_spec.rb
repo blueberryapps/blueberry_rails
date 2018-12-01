@@ -21,9 +21,11 @@ class BlueberryRailsTest < Minitest::Test
     assert_exist_file 'config/initializers/plurals.rb'
     assert_exist_file '.hound.yml'
     assert_exist_file '.rubocop.yml'
-    assert_exist_file 'circle.yml'
+    assert_exist_file '.jshintrc'
+    assert_exist_file '.circleci/config.yml'
     assert_exist_file '.rspec'
     assert_exist_file 'app.json'
+    assert_file_have_content '.ruby-version', BlueberryRails::RUBY_VERSION
     assert_file_have_content 'README.md', 'Test Project'
     assert_file_have_content 'bin/setup', 'bundle install --deployment'
     assert_file_have_content 'Procfile', 'bundle exec puma'
@@ -31,8 +33,6 @@ class BlueberryRailsTest < Minitest::Test
     assert_file_have_content 'config/environments/production.rb', 'Cache-Control'
     assert_file_have_content 'config/environments/production.rb', 'Rack::Deflater'
     assert_file_have_content 'Guardfile', 'factories'
-    assert_file_have_content 'config/secrets.yml', 'staging'
-    assert_file_have_content 'config/secrets.yml', 'integration'
     assert_file_have_content 'config/initializers/airbrake.rb', 'config.blacklist_keys'
 
     assert run_rake

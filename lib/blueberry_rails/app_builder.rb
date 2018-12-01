@@ -236,7 +236,7 @@ module BlueberryRails
                 else
                   "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}"
                 end
-      add_file '.ruby-version', "#{version}\n"
+      add_file '.ruby-version', "#{version}\n", force: true
     end
 
     def install_devise
