@@ -70,6 +70,7 @@ module BlueberryRails
       invoke :setup_initializers
       invoke :setup_heroku
       invoke :setup_cache_and_compress
+      invoke :setup_linters
     end
 
     def customize_gemfile
@@ -149,7 +150,6 @@ module BlueberryRails
       build :create_procfile
       build :create_puma_config
       build :add_ruby_version_file
-      build :hound_config
       build :configure_i18n
       build :configure_bin_setup
     end
@@ -187,6 +187,16 @@ module BlueberryRails
         say 'Add heroku reviews apps config'
         build :reviews_app
       end
+    end
+
+    def setup_linters
+      say 'Setting up linters'
+      build :hound_config
+    end
+
+    def setup_cocoon
+      say 'Setting up Cocoon'
+      build :cocoon_config
     end
 
     def rake_tasks

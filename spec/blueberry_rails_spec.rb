@@ -21,7 +21,7 @@ class BlueberryRailsTest < Minitest::Test
     assert_exist_file 'config/initializers/plurals.rb'
     assert_exist_file '.hound.yml'
     assert_exist_file '.rubocop.yml'
-    assert_exist_file '.jshintrc'
+    assert_exist_file '.eslintrc'
     assert_exist_file '.circleci/config.yml'
     assert_exist_file '.rspec'
     assert_exist_file 'app.json'
@@ -35,6 +35,9 @@ class BlueberryRailsTest < Minitest::Test
     assert_file_have_content 'config/environments/production.rb', 'Rack::Deflater'
     assert_file_have_content 'Guardfile', 'factories'
     assert_file_have_content 'config/initializers/airbrake.rb', 'config.blacklist_keys'
+    assert_file_have_content 'package.json', 'eslint'
+    assert_file_have_content 'package.json', 'cocoon'
+    assert_file_have_content 'app/javascript/packs/application.js', 'cocoon'
 
     assert run_rake
   end

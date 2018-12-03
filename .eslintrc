@@ -1,0 +1,21 @@
+{
+  "env": {
+    "browser": true,
+    "es6": true,
+    "mocha": true,
+    "node": true
+  },
+  "extends": ["airbnb-base"],
+  "rules": {
+    "import/no-extraneous-dependencies": [
+      "error",
+    ],
+    "object-property-newline": [
+      "error",
+      { "allowAllPropertiesOnSameLine": false }
+    ]
+  },
+  "globals": {
+    "expect": true
+  }
+}

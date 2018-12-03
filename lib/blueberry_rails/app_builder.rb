@@ -16,8 +16,17 @@ module BlueberryRails
 
     def hound_config
       copy_file '../.hound.yml', '.hound.yml'
-      copy_file '../.jshintrc', '.jshintrc'
+      copy_file '../.eslintrc', '.eslintrc'
       copy_file '../.rubocop.yml', '.rubocop.yml'
+
+      run 'yarn add -D eslint eslint-config-airbnb-base eslint-config-import'
+    end
+
+    def cocoon_config
+      run 'yarn add https://github.com/1776/cocoon'
+      inject_into_file 'app/javascript/packs/application.js',
+                       "import 'cocoon';\n",
+                       before: 'import { Application } from "stimulus"'
     end
 
     def setup_mailer_hosts
