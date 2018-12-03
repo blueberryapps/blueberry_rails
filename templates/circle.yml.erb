@@ -1,13 +1,71 @@
-machine:
-  services:
-    - postgresql
+version: 2
+jobs:
+  build:
+    docker:
+      # specify the version you desire here
+      - image: circleci/ruby:<%= BlueberryRails::RUBY_VERSION %>-node-browsers
+        environment:
+          BUNDLE_JOBS: 3
+          BUNDLE_RETRY: 3
+          BUNDLE_PATH: vendor/bundle
+          RAILS_ENV: test
+          DATABASE_URL: "postgres://<%= app_name.gsub('_', '-') %>@localhost:5432/<%= app_name.gsub('_', '-') %>-test"
+      - image: circleci/postgres:9.5-alpine
+        environment:
+          POSTGRES_USER: <%= app_name.gsub('_', '-') %>
+          POSTGRES_DB: <%= app_name.gsub('_', '-') %>-test
+          POSTGRES_PASSWORD: ""
 
-  # Version of ruby to use
-  ruby:
-    version:
-      <%= BlueberryRails::RUBY_VERSION %>
+    working_directory: ~/repo
 
+    steps:
+      - checkout
 
-  # Add some environment variables
-  environment:
-    CIRCLE_ENV: test
+      - run:
+          name: Update bundler
+          command: sudo gem update bundler
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "Gemfile.lock" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run:
+          name: install dependencies
+          command: |
+            bundle install --jobs=4 --retry=3 --path vendor/bundle
+
+      - save_cache:
+          paths:
+            - ./vendor/bundle
+          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+
+      - run:
+          name: Install yarn dependencies
+          command: yarn install
+
+      # Database setup
+      - run: bundle exec rails db:create
+      - run: bundle exec rails db:schema:load
+
+      # run tests!
+      - run:
+          name: run tests
+          command: |
+            mkdir /tmp/test-results
+            TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
+
+            bundle exec rspec --format progress \
+                            --format RspecJunitFormatter \
+                            --out /tmp/test-results/rspec.xml \
+                            --format progress \
+                            $TEST_FILES
+
+      # collect reports
+      - store_test_results:
+          path: /tmp/test-results
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: test-results

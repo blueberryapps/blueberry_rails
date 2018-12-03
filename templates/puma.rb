@@ -4,9 +4,8 @@ threads Integer(threads_count / 2), threads_count
 
 preload_app!
 
-rackup      DefaultRackup
-port        ENV['PORT']     || 3000
-environment ENV['RACK_ENV'] || 'development'
+port        ENV.fetch('PORT') { 3000 }
+environment ENV.fetch('RACK_ENV') { 'development' }
 
 on_worker_boot do
   # Worker specific setup for Rails 4.1+

@@ -8,8 +8,8 @@ html
     = meta_robots_tag
     meta charset='utf-8'
     meta name='viewport' content='width=device-width, initial-scale=1.0'
-    = render 'favicon'
-    = stylesheet_link_tag :application, media: 'all'
+    = render 'application/favicon'
+    = stylesheet_pack_tag 'application'
     = csrf_meta_tags
 
   body class=body_class
@@ -21,5 +21,5 @@ html
 
     = render 'footer'
 
-    = javascript_include_tag :application
+    = javascript_pack_tag 'application'
     = yield :javascript

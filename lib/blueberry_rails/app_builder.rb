@@ -14,21 +14,9 @@ module BlueberryRails
       template 'Gemfile_custom.erb', 'Gemfile'
     end
 
-    def secret_token
-      template 'secret_token.rb.erb', 'config/initializers/secret_token.rb'
-    end
-
-    def setup_secret_token
-      inject_into_file 'config/secrets.yml',
-                       "\nstaging:\n" \
-                       "  secret_key_base: <%= ENV[\"SECRET_KEY_BASE\"] %>\n" \
-                       "\nintegration:\n" \
-                       "  secret_key_base: <%= ENV[\"SECRET_KEY_BASE\"] %>\n",
-                       after: "  secret_key_base: <%= ENV[\"SECRET_KEY_BASE\"] %>\n"
-    end
-
     def hound_config
       copy_file '../.hound.yml', '.hound.yml'
+      copy_file '../.jshintrc', '.jshintrc'
       copy_file '../.rubocop.yml', '.rubocop.yml'
     end
 
@@ -73,14 +61,19 @@ module BlueberryRails
     end
 
     def create_partials_directory
-      directory 'views/application', 'app/views/application'
+      directory 'views/application', 'app/views/application', force: true
     end
 
     def create_application_layout
       remove_file 'app/views/layouts/application.html.erb'
+      remove_file 'app/views/layouts/mailer.html.erb'
+      remove_file 'app/views/layouts/mailer.text.erb'
 
       template 'views/layouts/application.html.slim.erb',
-               'app/views/layouts/application.html.slim'
+               'app/views/layouts/application.html.slim', force: true
+
+      template 'views/layouts/mailer.html.slim.erb',
+               'app/views/layouts/mailer.html.slim', force: true
 
       directory 'helpers', 'app/helpers', force: true
 
@@ -89,19 +82,15 @@ module BlueberryRails
     end
 
     def copy_assets_directory
-      remove_file 'app/assets/stylesheets/application.css'
-      remove_file 'app/assets/javascripts/application.js'
+      remove_file 'app/assets/stylesheets', force: true
+      remove_file 'app/assets/javascripts', force: true
 
-      directory 'assets', 'app/assets'
-
-      remove_file 'app/assets/icons'
+      run 'mkdir app/javascript/stylesheets', force: true
+      run 'touch app/javascript/packs/application.sass', force: true
 
       if options[:administration]
-        directory 'admin_assets', 'app/assets'
-
-        replace_in_file 'config/initializers/assets.rb',
-                        '.precompile += %w( ',
-                        '.precompile += %w( admin.css admin.js '
+        run 'touch app/javascript/packs/admin.js', force: true
+        run 'touch app/javascript/packs/admin.sass', force: true
       end
     end
 
@@ -135,11 +124,13 @@ module BlueberryRails
     end
 
     def create_database
-      bundle_command 'exec rake db:create'
+      bundle_command 'exec rails db:create'
     end
 
     def generate_rspec
       generate 'rspec:install'
+
+      copy_file 'spec/drivers.rb', 'spec/support/drivers.rb'
 
       inject_into_file 'spec/rails_helper.rb',
                        "\n# Screenshots\n" \
@@ -158,7 +149,7 @@ module BlueberryRails
     end
 
     def setup_rspec_support_files
-      copy_file 'spec/factory_girl_syntax.rb', 'spec/support/factory_girl.rb'
+      copy_file 'spec/factory_bot_syntax.rb', 'spec/support/factory_bot.rb'
       copy_file 'spec/database_cleaner_setup.rb', 'spec/support/database_cleaner.rb'
       copy_file 'spec/mail_body_helpers.rb', 'spec/support/mixins/mail_body_helpers.rb'
     end
@@ -204,11 +195,11 @@ module BlueberryRails
 
     def configure_i18n
       inject_into_file "config/application.rb",
-                       "\n\n    config.i18n.load_path += Dir[Rails.root.join 'config/locales/**/*.{rb,yml}']",
+                       "\n    config.i18n.load_path += Dir[Rails.root.join 'config/locales/**/*.{rb,yml}']",
                        before: "\n    # Settings"
 
       inject_into_file 'config/application.rb',
-                       "\n\n    config.i18n.available_locales = [:cs, :en]\n    config.i18n.default_locale = :cs",
+                       "\n    config.i18n.available_locales = [:cs, :en]\n    config.i18n.default_locale = :cs",
                        before: "\n    # Settings"
 
       remove_file 'config/locales/en.yml'
@@ -222,7 +213,8 @@ module BlueberryRails
     end
 
     def configure_circle
-      template 'circle.yml.erb', 'circle.yml'
+      empty_directory '.circleci'
+      template 'circle.yml.erb', '.circleci/config.yml'
     end
 
     def add_ruby_version_file
@@ -232,7 +224,7 @@ module BlueberryRails
                 else
                   "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}"
                 end
-      add_file '.ruby-version', "#{version}\n"
+      add_file '.ruby-version', "#{version}\n", force: true
     end
 
     def install_devise
@@ -292,12 +284,14 @@ module BlueberryRails
     end
 
     def setup_gitignore
-      [ 'spec/lib',
+      [
+        'spec/lib',
         'spec/controllers',
         'spec/features',
         'spec/support/matchers',
         'spec/support/mixins',
-        'spec/support/shared_examples' ].each do |dir|
+        'spec/support/shared_examples'
+      ].each do |dir|
         run "mkdir -p #{dir}"
         run "touch #{dir}/.keep"
       end
@@ -309,9 +303,6 @@ module BlueberryRails
 
     def copy_rake_tasks
       copy_file 'tasks/images.rake', 'lib/tasks/images.rake'
-      if options[:fontcustom]
-        copy_file 'tasks/icons.rake', 'lib/tasks/icons.rake'
-      end
     end
 
     def copy_custom_errors
@@ -324,15 +315,9 @@ module BlueberryRails
 
       inject_into_class 'config/application.rb', 'Application', config
 
-      remove_file 'public/404.html'
-      remove_file 'public/422.html'
-      remove_file 'public/500.html'
-    end
-
-    def copy_fontcustom_config
-      copy_file 'fontcustom.yml', 'fontcustom.yml'
-      copy_file 'assets/icons/_font_icons.scss',
-                'app/assets/icons/_font_icons.scss'
+      remove_file 'public/404.html', force: true
+      remove_file 'public/422.html', force: true
+      remove_file 'public/500.html', force: true
     end
 
     def configure_bin_setup

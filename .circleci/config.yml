@@ -1,0 +1,47 @@
+version: 2
+jobs:
+  build:
+    docker:
+      # specify the version you desire here
+      - image: circleci/ruby:2.5.1-node-browsers
+        environment:
+          BUNDLE_JOBS: 3
+          BUNDLE_RETRY: 3
+          RAILS_ENV: test
+          DATABASE_URL: "postgres://bb@localhost:5432/test_project_test"
+      - image: circleci/postgres:9.5-alpine
+        environment:
+          POSTGRES_USER: bb
+          POSTGRES_DB: test_project_test
+          POSTGRES_PASSWORD: ""
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - run:
+          name: Update bundler
+          command: sudo gem update bundler
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "lib/blueberry_rails/version.rb" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run:
+          name: install dependencies
+          command: |
+            bundle install --jobs=4 --retry=3
+
+      - save_cache:
+          paths:
+            - ./
+          key: v1-dependencies-{{ checksum "lib/blueberry_rails/version.rb" }}
+
+      # run tests!
+      - run:
+          name: run tests
+          command: bundle exec rake

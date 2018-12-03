@@ -28,10 +28,6 @@ Custom Erros
 
     --custom-errors
 
-Fontcustom
-
-    --fontncustom
-
 Twitter bootstrap
 
     --bootstrap
@@ -65,7 +61,7 @@ Testing related:
 
 * [Capybara](https://github.com/jnicklas/capybara) for acceptance testing
 * [Guard](https://github.com/ranmocy/guard-rails) for automatically running specs
-* [Factory Girl](https://github.com/rspec/rspec-rails) as a fixtures replacement
+* [factory_bot](https://github.com/thoughtbot/factory_bot) as a fixtures replacement
 * [Rspec](https://github.com/rspec/rspec-rails)
 
 ## Gulp

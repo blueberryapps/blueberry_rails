@@ -6,7 +6,6 @@ ENV['RAILS_ENV'] = 'test'
 require File.expand_path('../../config/environment', __FILE__)
 
 require 'rspec/rails'
-require 'capybara/poltergeist'
 
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |file| require file }
 
@@ -22,12 +21,6 @@ RSpec.configure do |config|
   config.order = 'random'
   config.use_transactional_fixtures = false
   config.include MailBodyHelpers, type: :mailer
-end
-
-Capybara.javascript_driver = :poltergeist
-
-Capybara.register_driver :poltergeist do |app|
-  Capybara::Poltergeist::Driver.new(app, { js_errors: false, timeout: 15 })
 end
 
 WebMock.disable_net_connect!(allow_localhost: true, allow: 'codeclimate.com')
