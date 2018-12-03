@@ -4,9 +4,6 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '<%= BlueberryRails::RUBY_VERSION %>'
 
 gem 'airbrake'
-<% unless options[:gulp] -%>
-gem 'autoprefixer-rails'
-<% end -%>
 <% if options[:administration] -%>
 gem 'blueberry_admin'
 <% end -%>

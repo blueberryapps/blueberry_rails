@@ -28,9 +28,6 @@ module BlueberryRails
     class_option :skip_bundle, type: :boolean, aliases: '-B', default: false,
       desc: 'Don\'t run bundle install'
 
-    class_option :gulp, type: :boolean, aliases: '-g', default: false,
-      desc: 'Include Gulp asset pipeline'
-
     class_option :administration, type: :boolean, aliases: '-a', default: false,
       desc: 'Include Admin part of application'
 
@@ -67,7 +64,6 @@ module BlueberryRails
       invoke :remove_routes_comment_lines
       invoke :setup_gems
       invoke :setup_git
-      invoke :setup_gulp
       invoke :setup_admin
       invoke :rake_tasks
       invoke :setup_custom_errors
@@ -184,13 +180,6 @@ module BlueberryRails
       say 'Initializing git'
       build :setup_gitignore
       build :init_git
-    end
-
-    def setup_gulp
-      if options[:gulp]
-        say 'Adding Gulp asset pipeline'
-        build :gulp_files
-      end
     end
 
     def setup_heroku
