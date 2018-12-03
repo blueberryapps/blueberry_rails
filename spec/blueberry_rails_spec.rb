@@ -25,6 +25,7 @@ class BlueberryRailsTest < Minitest::Test
     assert_exist_file '.circleci/config.yml'
     assert_exist_file '.rspec'
     assert_exist_file 'app.json'
+    assert_exist_file 'spec/support/drivers.rb'
     assert_file_have_content '.ruby-version', BlueberryRails::RUBY_VERSION
     assert_file_have_content 'README.md', 'Test Project'
     assert_file_have_content 'bin/setup', 'bundle install --deployment'

@@ -130,25 +130,13 @@ module BlueberryRails
     def generate_rspec
       generate 'rspec:install'
 
+      copy_file 'spec/drivers.rb', 'spec/support/drivers.rb'
+
       inject_into_file 'spec/rails_helper.rb',
                        "\n# Screenshots\n" \
                        "require 'capybara-screenshot/rspec'\n" \
                        "Capybara::Screenshot.autosave_on_failure =\n" \
-                       "  (ENV['SCR'] || ENV['AUTO_SCREENSHOT']) == '1'\n" \
-                       "\n# Webdriver\n" \
-                       "require 'selenium/webdriver'\n" \
-                       "\nCapybara.register_driver :chrome do |app|\n" \
-                       "  Capybara::Selenium::Driver.new(app, browser: :chrome)\n" \
-                       "end\n" \
-                       "\nCapybara.register_driver :headless_chrome do |app|\n" \
-                       "  Capybara::Selenium::Driver.new app,\n" \
-                       "    browser:              :chrome,\n" \
-                       "    desired_capabilities: Selenium::WebDriver::Remote::Capabilities.chrome(\n" \
-                       "      chromeOptions: { args: %w(headless disable-gpu window-size=1366,768) }\n" \
-                       "    )\n" \
-                       "end\n" \
-                       "\nCapybara.javascript_driver = :headless_chrome\n" \
-                       "# Capybara.javascript_driver = :chrome\n",
+                       "  (ENV['SCR'] || ENV['AUTO_SCREENSHOT']) == '1'\n",
                        after: "Rails is not loaded until this point!\n"
     end
 
