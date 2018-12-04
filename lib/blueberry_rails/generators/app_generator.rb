@@ -28,9 +28,6 @@ module BlueberryRails
     class_option :skip_bundle, type: :boolean, aliases: '-B', default: false,
       desc: 'Don\'t run bundle install'
 
-    class_option :gulp, type: :boolean, aliases: '-g', default: false,
-      desc: 'Include Gulp asset pipeline'
-
     class_option :administration, type: :boolean, aliases: '-a', default: false,
       desc: 'Include Admin part of application'
 
@@ -67,13 +64,13 @@ module BlueberryRails
       invoke :remove_routes_comment_lines
       invoke :setup_gems
       invoke :setup_git
-      invoke :setup_gulp
       invoke :setup_admin
       invoke :rake_tasks
       invoke :setup_custom_errors
       invoke :setup_initializers
       invoke :setup_heroku
       invoke :setup_cache_and_compress
+      invoke :setup_linters
     end
 
     def customize_gemfile
@@ -153,7 +150,6 @@ module BlueberryRails
       build :create_procfile
       build :create_puma_config
       build :add_ruby_version_file
-      build :hound_config
       build :configure_i18n
       build :configure_bin_setup
     end
@@ -186,18 +182,21 @@ module BlueberryRails
       build :init_git
     end
 
-    def setup_gulp
-      if options[:gulp]
-        say 'Adding Gulp asset pipeline'
-        build :gulp_files
-      end
-    end
-
     def setup_heroku
       if options[:heroku]
         say 'Add heroku reviews apps config'
         build :reviews_app
       end
+    end
+
+    def setup_linters
+      say 'Setting up linters'
+      build :hound_config
+    end
+
+    def setup_cocoon
+      say 'Setting up Cocoon'
+      build :cocoon_config
     end
 
     def rake_tasks

@@ -21,7 +21,7 @@ class BlueberryRailsTest < Minitest::Test
     assert_exist_file 'config/initializers/plurals.rb'
     assert_exist_file '.hound.yml'
     assert_exist_file '.rubocop.yml'
-    assert_exist_file '.jshintrc'
+    assert_exist_file '.eslintrc'
     assert_exist_file '.circleci/config.yml'
     assert_exist_file '.rspec'
     assert_exist_file 'app.json'
@@ -35,6 +35,9 @@ class BlueberryRailsTest < Minitest::Test
     assert_file_have_content 'config/environments/production.rb', 'Rack::Deflater'
     assert_file_have_content 'Guardfile', 'factories'
     assert_file_have_content 'config/initializers/airbrake.rb', 'config.blacklist_keys'
+    assert_file_have_content 'package.json', 'eslint'
+    assert_file_have_content 'package.json', 'cocoon'
+    assert_file_have_content 'app/javascript/packs/application.js', 'cocoon'
 
     assert run_rake
   end
@@ -81,17 +84,6 @@ class BlueberryRailsTest < Minitest::Test
     assert_exist_file 'app/controllers/errors_controller.rb'
     assert_file_have_content 'config/application.rb', 'config.exceptions_app'
 
-    assert run_rake
-  end
-
-  def test_rake_runs_with_gulp_option
-    create_project '--gulp'
-
-    assert_file_have_content 'config/environments/development.rb',
-                             'config.assets.digest = false'
-    assert_exist_file 'gulp/tasks/default.coffee'
-    assert_exist_file 'gulpfile.js'
-    assert_exist_file 'package.json'
     assert run_rake
   end
 

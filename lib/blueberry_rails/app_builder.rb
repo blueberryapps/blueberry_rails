@@ -16,8 +16,17 @@ module BlueberryRails
 
     def hound_config
       copy_file '../.hound.yml', '.hound.yml'
-      copy_file '../.jshintrc', '.jshintrc'
+      copy_file '../.eslintrc', '.eslintrc'
       copy_file '../.rubocop.yml', '.rubocop.yml'
+
+      run 'yarn add -D eslint eslint-config-airbnb-base eslint-config-import'
+    end
+
+    def cocoon_config
+      run 'yarn add https://github.com/1776/cocoon'
+      inject_into_file 'app/javascript/packs/application.js',
+                       "import 'cocoon';\n",
+                       before: 'import { Application } from "stimulus"'
     end
 
     def setup_mailer_hosts
@@ -337,37 +346,6 @@ module BlueberryRails
 
     def reviews_app
       template 'app.json.erb', 'app.json'
-    end
-
-    # Gulp
-    def gulp_files
-      copy_file 'gulp/gulp_helper.rb', 'app/helpers/gulp_helper.rb'
-      remove_file 'app/assets/stylesheets/application.css'
-      copy_file 'gulp/application.sass',
-                'app/assets/stylesheets/application.sass'
-      remove_file 'app/assets/javascripts/application.js'
-      copy_file 'gulp/application.js.coffee',
-                'app/assets/javascripts/application.js.coffee'
-
-      application do
-        "# Make public assets requireable in manifest files\n    "  \
-        "config.assets.paths << Rails.root.join('public', 'assets', 'stylesheets')\n    " \
-        "config.assets.paths << Rails.root.join('public', 'assets', 'javascripts')\n"
-      end
-
-      inject_into_file 'config/environments/development.rb',
-                       "config.assets.digest = false\n",
-                       before: 'config.assets.quiet = true'
-
-      copy_file 'gulp/rev_manifest.rb', 'config/initializers/rev_manifest.rb'
-      copy_file 'gulp/global.coffee',   'gulp/assets/javascripts/global.coffee'
-      copy_file 'gulp/message.coffee',  'gulp/assets/javascripts/message.coffee'
-      copy_file 'gulp/global.sass',     'gulp/assets/stylesheets/global.sass'
-      copy_file 'gulp/config.coffee'
-      directory 'gulp/tasks'
-      directory 'gulp/util'
-      copy_file 'gulp/gulpfile.js',  'gulpfile.js'
-      copy_file 'gulp/package.json', 'package.json', force: true
     end
   end
 end
